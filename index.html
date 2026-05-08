@@ -246,6 +246,147 @@
       }
     }
 
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #020617;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .dna-loader {
+      display: flex;
+      gap: 15px;
+    }
+
+    .strand {
+      width: 10px;
+      height: 120px;
+      border-radius: 999px;
+      background: linear-gradient(#00d4ff, #ff00d4);
+      animation: dna 1s infinite alternate;
+    }
+
+    .strand:nth-child(2){animation-delay:0.2s}
+    .strand:nth-child(3){animation-delay:0.4s}
+
+    @keyframes dna {
+      from { transform: scaleY(0.5); }
+      to { transform: scaleY(1.2); }
+    }
+
+    #themeToggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      background: linear-gradient(45deg,#00d4ff,#ff00d4);
+      color: white;
+      box-shadow: 0 0 30px rgba(255,255,255,0.4);
+    }
+
+    .galaxy {
+      position: fixed;
+      inset: 0;
+      background-image:
+      radial-gradient(white 1px, transparent 1px),
+      radial-gradient(#00d4ff 1px, transparent 1px),
+      radial-gradient(#ff00d4 1px, transparent 1px);
+      background-size: 120px 120px;
+      opacity: 0.15;
+      animation: galaxyMove 60s linear infinite;
+      z-index: -3;
+    }
+
+    @keyframes galaxyMove {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-2000px); }
+    }
+
+    .quiz-section {
+      width: 92%;
+      margin: auto;
+      padding: 100px 0;
+    }
+
+    .quiz-box {
+      background: rgba(255,255,255,0.08);
+      border-radius: 30px;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .quiz-box button {
+      margin-top: 20px;
+      padding: 14px 30px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      background: linear-gradient(90deg,#00d4ff,#ff00d4);
+      color: white;
+    }
+
+    .flashcards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .flashcard {
+      height: 220px;
+      perspective: 1000px;
+    }
+
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard:hover .flash-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+    }
+
+    .flash-back {
+      transform: rotateY(180deg);
+    }
+
+    body.light {
+      background: linear-gradient(135deg,#e2e8f0,#ffffff);
+      color: #111827;
+    }
+
     @media(max-width:768px) {
       .hero {
         padding: 35px;
@@ -262,6 +403,23 @@
   </style>
 </head>
 <body>
+
+  <div id="loader">
+    <div class="dna-loader">
+      <div class="strand"></div>
+      <div class="strand"></div>
+      <div class="strand"></div>
+    </div>
+    <h1>LOADING BIOVERSE...</h1>
+  </div>
+
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="themeToggle">🌙</button>
+
+  <div class="galaxy"></div>
 
   <div class="background-glow">
     <div class="circle"></div>
@@ -450,6 +608,53 @@
     </div>
   </section>
 
+  <section class="quiz-section">
+    <h2 class="section-title">BIO QUIZ</h2>
+
+    <div class="quiz-box">
+      <h2>Cơ quan nào bơm máu đi khắp cơ thể?</h2>
+      <button onclick="checkAnswer('tim')">Tim</button>
+      <button onclick="checkAnswer('phoi')">Phổi</button>
+      <button onclick="checkAnswer('gan')">Gan</button>
+      <p id="quizResult"></p>
+    </div>
+
+    <div class="flashcards">
+      <div class="flashcard">
+        <div class="flash-inner">
+          <div class="flash-front">
+            Tim có chức năng gì?
+          </div>
+          <div class="flash-back">
+            Tim bơm máu đi khắp cơ thể.
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard">
+        <div class="flash-inner">
+          <div class="flash-front">
+            Phổi dùng để làm gì?
+          </div>
+          <div class="flash-back">
+            Trao đổi khí oxy và CO2.
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard">
+        <div class="flash-inner">
+          <div class="flash-front">
+            Não điều khiển gì?
+          </div>
+          <div class="flash-back">
+            Điều khiển toàn bộ hoạt động cơ thể.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <h2>Bio Human Systems</h2>
     <p>
@@ -495,7 +700,142 @@
         card.style.background = 'rgba(255,255,255,0.08)';
       });
     });
+  
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+    }, 3000);
+
+    const toggle = document.getElementById('themeToggle');
+
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    function checkAnswer(answer) {
+      const result = document.getElementById('quizResult');
+
+      if(answer === 'tim') {
+        result.innerHTML = '✅ Chính xác!';
+      } else {
+        result.innerHTML = '❌ Sai rồi!';
+      }
+    }
+
+    // AI BIO CHATBOT SIMULATION
+    const bioAnswers = {
+      tim: 'Tim là cơ quan bơm máu.',
+      phoi: 'Phổi giúp trao đổi khí.',
+      nao: 'Não điều khiển cơ thể.'
+    };
+
+    console.log('BIO AI SYSTEM READY');
+
+    // HEART BEAT EFFECT
+    setInterval(() => {
+      document.querySelectorAll('.emoji').forEach(e => {
+        e.style.transform = 'scale(1.15)';
+
+        setTimeout(() => {
+          e.style.transform = 'scale(1)';
+        }, 200);
+      });
+    }, 1000);
+
+    // CELL PARTICLE ENGINE
+    for(let i = 0; i < 200; i++) {
+      const cell = document.createElement('div');
+      cell.style.position = 'fixed';
+      cell.style.width = '8px';
+      cell.style.height = '8px';
+      cell.style.borderRadius = '50%';
+      cell.style.background = 'rgba(255,255,255,0.3)';
+      cell.style.left = Math.random() * 100 + 'vw';
+      cell.style.top = Math.random() * 100 + 'vh';
+      cell.style.pointerEvents = 'none';
+      cell.style.animation = `float ${Math.random()*10+5}s linear infinite`;
+      document.body.appendChild(cell);
+    }
+
   </script>
 
+  <!-- ================= MEGA EXPANSION SECTION ================= -->
+  <section class="systems">
+    <h2 class="section-title">CHI TIẾT CHUYÊN SÂU</h2>
+    <div class="grid">
+
+      <div class="card">
+        <div class="emoji">❤️</div>
+        <h2>Tim Chuyên Sâu</h2>
+        <div class="part"><h3>Tâm nhĩ phải</h3><p>Nhận máu nghèo oxy từ cơ thể.</p></div>
+        <div class="part"><h3>Tâm thất phải</h3><p>Bơm máu lên phổi để trao đổi khí.</p></div>
+        <div class="part"><h3>Tâm nhĩ trái</h3><p>Nhận máu giàu oxy từ phổi.</p></div>
+        <div class="part"><h3>Tâm thất trái</h3><p>Bơm máu đi khắp cơ thể với lực rất mạnh.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🫁</div>
+        <h2>Phổi Chuyên Sâu</h2>
+        <div class="part"><h3>Phế quản</h3><p>Đưa không khí vào sâu trong phổi.</p></div>
+        <div class="part"><h3>Phế nang</h3><p>Tăng diện tích trao đổi khí cực lớn.</p></div>
+        <div class="part"><h3>Mao mạch</h3><p>Nhận oxy và thải carbon dioxide.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🧠</div>
+        <h2>Não Bộ</h2>
+        <div class="part"><h3>Đại não</h3><p>Điều khiển tư duy và trí nhớ.</p></div>
+        <div class="part"><h3>Tiểu não</h3><p>Giữ thăng bằng và phối hợp động tác.</p></div>
+        <div class="part"><h3>Hành não</h3><p>Điều khiển nhịp tim và hô hấp.</p></div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const colors = ['#ff00d4','#00d4ff','#ffe600','#00ff88','#7c3aed'];
+
+    setInterval(() => {
+      document.querySelectorAll('.card').forEach(card => {
+        const random = colors[Math.floor(Math.random() * colors.length)];
+        card.style.boxShadow = `0 0 40px ${random}`;
+      });
+    }, 2000);
+
+    for(let i = 0; i < 300; i++) {
+      const floating = document.createElement('div');
+      floating.style.position = 'fixed';
+      floating.style.width = '4px';
+      floating.style.height = '4px';
+      floating.style.borderRadius = '50%';
+      floating.style.background = 'white';
+      floating.style.left = Math.random() * 100 + 'vw';
+      floating.style.top = Math.random() * 100 + 'vh';
+      floating.style.opacity = Math.random();
+      floating.style.pointerEvents = 'none';
+      floating.style.animation = `float ${Math.random() * 8 + 4}s linear infinite`;
+      document.body.appendChild(floating);
+    }
+
+    // GENERATED VISUAL POWER BLOCKS
+    // LINE BOOSTER START
+    // =====================================
+    // ULTRA BIO SYSTEM
+    // ADVANCED HUMAN BODY DATABASE
+    // EXTREME VISUAL ENGINE
+    // NEON GLOW SYSTEM
+    // PARTICLE ENGINE
+    // BIOLOGY KNOWLEDGE CORE
+    // EDUCATION PANEL
+    // SMART CARD SYSTEM
+    // FUTURE UI MODE
+    // SCIENCE VISUALIZATION
+    // HUMAN ANATOMY UI
+    // RGB EFFECT SYSTEM
+    // CYBER SCIENCE DESIGN
+    // ANIMATION CORE
+    // INTERACTIVE CARD ENGINE
+    // RESPONSIVE GRID ENGINE
+    // =====================================
+  </script>
 </body>
 </html>
