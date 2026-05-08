@@ -1,0 +1,48 @@
+/* Chi tiết cơ quan khi chọn */
+#anatomy-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: 600px;
+}
+
+.organ-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.organ-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.organ-item:hover {
+    background: rgba(0, 242, 254, 0.1);
+    border-left-color: var(--neon-blue);
+    transform: translateX(10px);
+}
+
+.organ-detail-card {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--neon-blue);
+    padding: 25px;
+    border-radius: 20px;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.system-active {
+    box-shadow: 0 0 20px var(--neon-blue);
+    border: 2px solid var(--neon-blue) !important;
+}
