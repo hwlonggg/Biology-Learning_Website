@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bio Human Systems Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b, #111827);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .background-glow {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: float 10s infinite alternate;
+    }
+
+    .circle:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      background: #ff0080;
+      top: -80px;
+      left: -80px;
+    }
+
+    .circle:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      background: #00d4ff;
+      bottom: -120px;
+      right: -100px;
+    }
+
+    .circle:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      background: #7c3aed;
+      top: 50%;
+      left: 50%;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0px) translateX(0px);
+      }
+      to {
+        transform: translateY(50px) translateX(30px);
+      }
+    }
+
+    header {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+      position: relative;
+    }
+
+    .hero {
+      max-width: 1100px;
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 60px;
+      border-radius: 40px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.5);
+    }
+
+    .hero h1 {
+      font-size: 70px;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #00e0ff, #ff00d4, #ffe600);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 25px;
+      font-weight: 800;
+    }
+
+    .hero p {
+      font-size: 20px;
+      line-height: 1.8;
+      color: #dbeafe;
+      margin-bottom: 35px;
+    }
+
+    .hero button {
+      padding: 18px 40px;
+      border-radius: 999px;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(90deg, #ff00d4, #00d4ff);
+      color: white;
+      transition: 0.3s;
+      box-shadow: 0 0 25px rgba(0,212,255,0.5);
+    }
+
+    .hero button:hover {
+      transform: scale(1.05);
+    }
+
+    .systems {
+      width: 92%;
+      margin: auto;
+      padding-bottom: 120px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 50px;
+      margin-bottom: 70px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 35px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 35px;
+      padding: 35px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: 0.5s;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    .card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      top: -70px;
+      right: -70px;
+    }
+
+    .emoji {
+      font-size: 60px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .card h2 {
+      font-size: 34px;
+      margin-bottom: 20px;
+    }
+
+    .part {
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .part h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+      color: #facc15;
+    }
+
+    .part p {
+      color: #e2e8f0;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    footer h2 {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    footer p {
+      color: #cbd5e1;
+      line-height: 1.8;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .spark {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 5s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes sparkle {
+      from {
+        transform: translateY(100vh);
+      }
+      to {
+        transform: translateY(-100vh);
+      }
+    }
+
+    @media(max-width:768px) {
+      .hero {
+        padding: 35px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+
+      .section-title {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-glow">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <div class="sparkles" id="sparkles"></div>
+
+  <header>
+    <div class="hero">
+      <h1>KHÁM PHÁ 8 HỆ CƠ QUAN CƠ THỂ NGƯỜI</h1>
+      <p>
+        Một website sinh học màu mè đẹp mắt giúp học sinh tìm hiểu về các hệ cơ quan quan trọng trong cơ thể người.
+        Gồm cấu tạo, chức năng và vai trò của từng bộ phận với giao diện hiện đại cực ngầu.
+      </p>
+      <button onclick="scrollToSystems()">BẮT ĐẦU KHÁM PHÁ</button>
+    </div>
+  </header>
+
+  <section class="systems" id="systems">
+    <h2 class="section-title">8 HỆ CƠ QUAN CHÍNH</h2>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="emoji">🫀</div>
+        <h2>Hệ Tuần Hoàn</h2>
+
+        <div class="part">
+          <h3>Tim</h3>
+          <p>Co bóp liên tục để bơm máu giàu oxy và chất dinh dưỡng đi khắp cơ thể.</p>
+        </div>
+
+        <div class="part">
+          <h3>Động mạch</h3>
+          <p>Vận chuyển máu từ tim đến các cơ quan với áp lực lớn.</p>
+        </div>
+
+        <div class="part">
+          <h3>Tĩnh mạch</h3>
+          <p>Đưa máu quay trở lại tim sau khi trao đổi chất.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🫁</div>
+        <h2>Hệ Hô Hấp</h2>
+
+        <div class="part">
+          <h3>Phổi</h3>
+          <p>Trao đổi khí oxy và carbon dioxide để duy trì sự sống.</p>
+        </div>
+
+        <div class="part">
+          <h3>Khí quản</h3>
+          <p>Dẫn không khí từ ngoài vào phổi và ngược lại.</p>
+        </div>
+
+        <div class="part">
+          <h3>Phế nang</h3>
+          <p>Nơi diễn ra quá trình trao đổi khí với mao mạch máu.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🧠</div>
+        <h2>Hệ Thần Kinh</h2>
+
+        <div class="part">
+          <h3>Não</h3>
+          <p>Điều khiển suy nghĩ, cảm xúc, trí nhớ và hoạt động toàn cơ thể.</p>
+        </div>
+
+        <div class="part">
+          <h3>Tủy sống</h3>
+          <p>Truyền tín hiệu giữa não và các cơ quan khác.</p>
+        </div>
+
+        <div class="part">
+          <h3>Dây thần kinh</h3>
+          <p>Tiếp nhận và truyền thông tin thần kinh đi khắp cơ thể.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🍔</div>
+        <h2>Hệ Tiêu Hóa</h2>
+
+        <div class="part">
+          <h3>Dạ dày</h3>
+          <p>Nghiền và tiêu hóa thức ăn bằng enzyme và axit.</p>
+        </div>
+
+        <div class="part">
+          <h3>Ruột non</h3>
+          <p>Hấp thụ phần lớn chất dinh dưỡng vào máu.</p>
+        </div>
+
+        <div class="part">
+          <h3>Gan</h3>
+          <p>Khử độc, dự trữ năng lượng và sản xuất dịch mật.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🦴</div>
+        <h2>Hệ Vận Động</h2>
+
+        <div class="part">
+          <h3>Xương</h3>
+          <p>Nâng đỡ cơ thể và bảo vệ các cơ quan bên trong.</p>
+        </div>
+
+        <div class="part">
+          <h3>Cơ</h3>
+          <p>Co giãn giúp cơ thể di chuyển linh hoạt.</p>
+        </div>
+
+        <div class="part">
+          <h3>Khớp</h3>
+          <p>Kết nối xương và tạo khả năng vận động.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">💧</div>
+        <h2>Hệ Bài Tiết</h2>
+
+        <div class="part">
+          <h3>Thận</h3>
+          <p>Lọc máu và tạo nước tiểu để loại bỏ chất thải.</p>
+        </div>
+
+        <div class="part">
+          <h3>Bàng quang</h3>
+          <p>Chứa nước tiểu trước khi được đào thải ra ngoài.</p>
+        </div>
+
+        <div class="part">
+          <h3>Niệu quản</h3>
+          <p>Đưa nước tiểu từ thận xuống bàng quang.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🛡️</div>
+        <h2>Hệ Miễn Dịch</h2>
+
+        <div class="part">
+          <h3>Bạch cầu</h3>
+          <p>Tiêu diệt vi khuẩn và virus gây bệnh.</p>
+        </div>
+
+        <div class="part">
+          <h3>Hạch bạch huyết</h3>
+          <p>Lọc tác nhân gây bệnh và hỗ trợ miễn dịch.</p>
+        </div>
+
+        <div class="part">
+          <h3>Lá lách</h3>
+          <p>Loại bỏ tế bào máu già và hỗ trợ hệ miễn dịch.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🧬</div>
+        <h2>Hệ Nội Tiết</h2>
+
+        <div class="part">
+          <h3>Tuyến yên</h3>
+          <p>Điều khiển hoạt động của nhiều tuyến nội tiết khác.</p>
+        </div>
+
+        <div class="part">
+          <h3>Tuyến giáp</h3>
+          <p>Điều hòa chuyển hóa và phát triển cơ thể.</p>
+        </div>
+
+        <div class="part">
+          <h3>Tuyến tụy</h3>
+          <p>Tiết insulin giúp ổn định đường huyết.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <h2>Bio Human Systems</h2>
+    <p>
+      Website học sinh học giao diện neon hiện đại giúp học sinh học nhanh hơn,
+      trực quan hơn và thú vị hơn khi khám phá cơ thể người.
+    </p>
+  </footer>
+
+  <script>
+    function scrollToSystems() {
+      document.getElementById('systems').scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+
+    const sparkles = document.getElementById('sparkles');
+
+    for(let i = 0; i < 120; i++) {
+      const spark = document.createElement('div');
+      spark.classList.add('spark');
+
+      spark.style.left = Math.random() * 100 + 'vw';
+      spark.style.top = Math.random() * 100 + 'vh';
+      spark.style.animationDuration = (Math.random() * 5 + 3) + 's';
+      spark.style.opacity = Math.random();
+      spark.style.transform = `scale(${Math.random() * 2})`;
+
+      sparkles.appendChild(spark);
+    }
+
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.2), rgba(255,255,255,0.07))`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.background = 'rgba(255,255,255,0.08)';
+      });
+    });
+  </script>
+
+</body>
+</html>
