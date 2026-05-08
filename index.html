@@ -1,841 +1,248 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bio Human Systems Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIO-VERSE: Kỷ Nguyên Sinh Học 3D</title>
+    <!-- Thư viện hỗ trợ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
 
-    body {
-      background: linear-gradient(135deg, #0f172a, #1e293b, #111827);
-      color: white;
-      overflow-x: hidden;
-    }
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            scroll-behavior: smooth;
+        }
 
-    .background-glow {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      z-index: -1;
-    }
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .circle {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.5;
-      animation: float 10s infinite alternate;
-    }
+        .dna-loader {
+            width: 100px;
+            height: 100px;
+            border: 5px dotted var(--primary);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
 
-    .circle:nth-child(1) {
-      width: 300px;
-      height: 300px;
-      background: #ff0080;
-      top: -80px;
-      left: -80px;
-    }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    .circle:nth-child(2) {
-      width: 400px;
-      height: 400px;
-      background: #00d4ff;
-      bottom: -120px;
-      right: -100px;
-    }
+        /* Galaxy Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
 
-    .circle:nth-child(3) {
-      width: 250px;
-      height: 250px;
-      background: #7c3aed;
-      top: 50%;
-      left: 50%;
-    }
+        /* Glassmorphism UI */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            transition: 0.4s ease;
+        }
 
-    @keyframes float {
-      from {
-        transform: translateY(0px) translateX(0px);
-      }
-      to {
-        transform: translateY(50px) translateX(30px);
-      }
-    }
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
 
-    header {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px;
-      position: relative;
-    }
+        /* DNA Animation Side */
+        .dna-bg {
+            position: fixed;
+            right: 20px;
+            top: 0;
+            height: 100%;
+            width: 50px;
+            opacity: 0.3;
+            z-index: 0;
+        }
 
-    .hero {
-      max-width: 1100px;
-      backdrop-filter: blur(20px);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      padding: 60px;
-      border-radius: 40px;
-      box-shadow: 0 0 60px rgba(0,0,0,0.5);
-    }
+        /* Heartbeat Animation */
+        .heart-rate {
+            width: 150px;
+            height: 73px;
+            position: relative;
+            margin: 20px auto;
+        }
 
-    .hero h1 {
-      font-size: 70px;
-      line-height: 1.1;
-      background: linear-gradient(90deg, #00e0ff, #ff00d4, #ffe600);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 25px;
-      font-weight: 800;
-    }
+        .fade-in { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .hero p {
-      font-size: 20px;
-      line-height: 1.8;
-      color: #dbeafe;
-      margin-bottom: 35px;
-    }
-
-    .hero button {
-      padding: 18px 40px;
-      border-radius: 999px;
-      border: none;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      background: linear-gradient(90deg, #ff00d4, #00d4ff);
-      color: white;
-      transition: 0.3s;
-      box-shadow: 0 0 25px rgba(0,212,255,0.5);
-    }
-
-    .hero button:hover {
-      transform: scale(1.05);
-    }
-
-    .systems {
-      width: 92%;
-      margin: auto;
-      padding-bottom: 120px;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 50px;
-      margin-bottom: 70px;
-      font-weight: 800;
-      color: #f8fafc;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 35px;
-    }
-
-    .card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 35px;
-      padding: 35px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.15);
-      transition: 0.5s;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    }
-
-    .card:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      top: -70px;
-      right: -70px;
-    }
-
-    .emoji {
-      font-size: 60px;
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    .card h2 {
-      font-size: 34px;
-      margin-bottom: 20px;
-    }
-
-    .part {
-      margin-bottom: 18px;
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.07);
-    }
-
-    .part h3 {
-      margin-bottom: 8px;
-      font-size: 20px;
-      color: #facc15;
-    }
-
-    .part p {
-      color: #e2e8f0;
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 60px 20px;
-      background: rgba(255,255,255,0.05);
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    footer h2 {
-      font-size: 40px;
-      margin-bottom: 15px;
-    }
-
-    footer p {
-      color: #cbd5e1;
-      line-height: 1.8;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .sparkles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .spark {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background: white;
-      border-radius: 50%;
-      animation: sparkle 5s linear infinite;
-      opacity: 0.6;
-    }
-
-    @keyframes sparkle {
-      from {
-        transform: translateY(100vh);
-      }
-      to {
-        transform: translateY(-100vh);
-      }
-    }
-
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: #020617;
-      z-index: 99999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-    }
-
-    .dna-loader {
-      display: flex;
-      gap: 15px;
-    }
-
-    .strand {
-      width: 10px;
-      height: 120px;
-      border-radius: 999px;
-      background: linear-gradient(#00d4ff, #ff00d4);
-      animation: dna 1s infinite alternate;
-    }
-
-    .strand:nth-child(2){animation-delay:0.2s}
-    .strand:nth-child(3){animation-delay:0.4s}
-
-    @keyframes dna {
-      from { transform: scaleY(0.5); }
-      to { transform: scaleY(1.2); }
-    }
-
-    #themeToggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 24px;
-      cursor: pointer;
-      background: linear-gradient(45deg,#00d4ff,#ff00d4);
-      color: white;
-      box-shadow: 0 0 30px rgba(255,255,255,0.4);
-    }
-
-    .galaxy {
-      position: fixed;
-      inset: 0;
-      background-image:
-      radial-gradient(white 1px, transparent 1px),
-      radial-gradient(#00d4ff 1px, transparent 1px),
-      radial-gradient(#ff00d4 1px, transparent 1px);
-      background-size: 120px 120px;
-      opacity: 0.15;
-      animation: galaxyMove 60s linear infinite;
-      z-index: -3;
-    }
-
-    @keyframes galaxyMove {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-2000px); }
-    }
-
-    .quiz-section {
-      width: 92%;
-      margin: auto;
-      padding: 100px 0;
-    }
-
-    .quiz-box {
-      background: rgba(255,255,255,0.08);
-      border-radius: 30px;
-      padding: 40px;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .quiz-box button {
-      margin-top: 20px;
-      padding: 14px 30px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-weight: 700;
-      background: linear-gradient(90deg,#00d4ff,#ff00d4);
-      color: white;
-    }
-
-    .flashcards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-      gap: 30px;
-      margin-top: 60px;
-    }
-
-    .flashcard {
-      height: 220px;
-      perspective: 1000px;
-    }
-
-    .flash-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.8s;
-      transform-style: preserve-3d;
-    }
-
-    .flashcard:hover .flash-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flash-front,
-    .flash-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-    }
-
-    .flash-back {
-      transform: rotateY(180deg);
-    }
-
-    body.light {
-      background: linear-gradient(135deg,#e2e8f0,#ffffff);
-      color: #111827;
-    }
-
-    @media(max-width:768px) {
-      .hero {
-        padding: 35px;
-      }
-
-      .hero h1 {
-        font-size: 42px;
-      }
-
-      .section-title {
-        font-size: 38px;
-      }
-    }
-  </style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+    </style>
 </head>
 <body>
 
-  <div id="loader">
-    <div class="dna-loader">
-      <div class="strand"></div>
-      <div class="strand"></div>
-      <div class="strand"></div>
-    </div>
-    <h1>LOADING BIOVERSE...</h1>
-  </div>
-
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
-  </audio>
-
-  <button id="themeToggle">🌙</button>
-
-  <div class="galaxy"></div>
-
-  <div class="background-glow">
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-  </div>
-
-  <div class="sparkles" id="sparkles"></div>
-
-  <header>
-    <div class="hero">
-      <h1>KHÁM PHÁ 8 HỆ CƠ QUAN CƠ THỂ NGƯỜI</h1>
-      <p>
-        Một website sinh học màu mè đẹp mắt giúp học sinh tìm hiểu về các hệ cơ quan quan trọng trong cơ thể người.
-        Gồm cấu tạo, chức năng và vai trò của từng bộ phận với giao diện hiện đại cực ngầu.
-      </p>
-      <button onclick="scrollToSystems()">BẮT ĐẦU KHÁM PHÁ</button>
-    </div>
-  </header>
-
-  <section class="systems" id="systems">
-    <h2 class="section-title">8 HỆ CƠ QUAN CHÍNH</h2>
-
-    <div class="grid">
-
-      <div class="card">
-        <div class="emoji">🫀</div>
-        <h2>Hệ Tuần Hoàn</h2>
-
-        <div class="part">
-          <h3>Tim</h3>
-          <p>Co bóp liên tục để bơm máu giàu oxy và chất dinh dưỡng đi khắp cơ thể.</p>
-        </div>
-
-        <div class="part">
-          <h3>Động mạch</h3>
-          <p>Vận chuyển máu từ tim đến các cơ quan với áp lực lớn.</p>
-        </div>
-
-        <div class="part">
-          <h3>Tĩnh mạch</h3>
-          <p>Đưa máu quay trở lại tim sau khi trao đổi chất.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🫁</div>
-        <h2>Hệ Hô Hấp</h2>
-
-        <div class="part">
-          <h3>Phổi</h3>
-          <p>Trao đổi khí oxy và carbon dioxide để duy trì sự sống.</p>
-        </div>
-
-        <div class="part">
-          <h3>Khí quản</h3>
-          <p>Dẫn không khí từ ngoài vào phổi và ngược lại.</p>
-        </div>
-
-        <div class="part">
-          <h3>Phế nang</h3>
-          <p>Nơi diễn ra quá trình trao đổi khí với mao mạch máu.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🧠</div>
-        <h2>Hệ Thần Kinh</h2>
-
-        <div class="part">
-          <h3>Não</h3>
-          <p>Điều khiển suy nghĩ, cảm xúc, trí nhớ và hoạt động toàn cơ thể.</p>
-        </div>
-
-        <div class="part">
-          <h3>Tủy sống</h3>
-          <p>Truyền tín hiệu giữa não và các cơ quan khác.</p>
-        </div>
-
-        <div class="part">
-          <h3>Dây thần kinh</h3>
-          <p>Tiếp nhận và truyền thông tin thần kinh đi khắp cơ thể.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🍔</div>
-        <h2>Hệ Tiêu Hóa</h2>
-
-        <div class="part">
-          <h3>Dạ dày</h3>
-          <p>Nghiền và tiêu hóa thức ăn bằng enzyme và axit.</p>
-        </div>
-
-        <div class="part">
-          <h3>Ruột non</h3>
-          <p>Hấp thụ phần lớn chất dinh dưỡng vào máu.</p>
-        </div>
-
-        <div class="part">
-          <h3>Gan</h3>
-          <p>Khử độc, dự trữ năng lượng và sản xuất dịch mật.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🦴</div>
-        <h2>Hệ Vận Động</h2>
-
-        <div class="part">
-          <h3>Xương</h3>
-          <p>Nâng đỡ cơ thể và bảo vệ các cơ quan bên trong.</p>
-        </div>
-
-        <div class="part">
-          <h3>Cơ</h3>
-          <p>Co giãn giúp cơ thể di chuyển linh hoạt.</p>
-        </div>
-
-        <div class="part">
-          <h3>Khớp</h3>
-          <p>Kết nối xương và tạo khả năng vận động.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">💧</div>
-        <h2>Hệ Bài Tiết</h2>
-
-        <div class="part">
-          <h3>Thận</h3>
-          <p>Lọc máu và tạo nước tiểu để loại bỏ chất thải.</p>
-        </div>
-
-        <div class="part">
-          <h3>Bàng quang</h3>
-          <p>Chứa nước tiểu trước khi được đào thải ra ngoài.</p>
-        </div>
-
-        <div class="part">
-          <h3>Niệu quản</h3>
-          <p>Đưa nước tiểu từ thận xuống bàng quang.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🛡️</div>
-        <h2>Hệ Miễn Dịch</h2>
-
-        <div class="part">
-          <h3>Bạch cầu</h3>
-          <p>Tiêu diệt vi khuẩn và virus gây bệnh.</p>
-        </div>
-
-        <div class="part">
-          <h3>Hạch bạch huyết</h3>
-          <p>Lọc tác nhân gây bệnh và hỗ trợ miễn dịch.</p>
-        </div>
-
-        <div class="part">
-          <h3>Lá lách</h3>
-          <p>Loại bỏ tế bào máu già và hỗ trợ hệ miễn dịch.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🧬</div>
-        <h2>Hệ Nội Tiết</h2>
-
-        <div class="part">
-          <h3>Tuyến yên</h3>
-          <p>Điều khiển hoạt động của nhiều tuyến nội tiết khác.</p>
-        </div>
-
-        <div class="part">
-          <h3>Tuyến giáp</h3>
-          <p>Điều hòa chuyển hóa và phát triển cơ thể.</p>
-        </div>
-
-        <div class="part">
-          <h3>Tuyến tụy</h3>
-          <p>Tiết insulin giúp ổn định đường huyết.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="quiz-section">
-    <h2 class="section-title">BIO QUIZ</h2>
-
-    <div class="quiz-box">
-      <h2>Cơ quan nào bơm máu đi khắp cơ thể?</h2>
-      <button onclick="checkAnswer('tim')">Tim</button>
-      <button onclick="checkAnswer('phoi')">Phổi</button>
-      <button onclick="checkAnswer('gan')">Gan</button>
-      <p id="quizResult"></p>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="dna-loader"></div>
+        <h1 class="mt-4 text-2xl font-bold tracking-widest text-cyan-400">LOADING BIO-VERSE...</h1>
     </div>
 
-    <div class="flashcards">
-      <div class="flashcard">
-        <div class="flash-inner">
-          <div class="flash-front">
-            Tim có chức năng gì?
-          </div>
-          <div class="flash-back">
-            Tim bơm máu đi khắp cơ thể.
-          </div>
+    <!-- Background Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass-card rounded-none border-t-0">
+        <div class="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+            BIO<span class="text-white text-xl">STUDY</span>
         </div>
-      </div>
-
-      <div class="flashcard">
-        <div class="flash-inner">
-          <div class="flash-front">
-            Phổi dùng để làm gì?
-          </div>
-          <div class="flash-back">
-            Trao đổi khí oxy và CO2.
-          </div>
+        <div class="space-x-8 hidden md:flex">
+            <a href="#home" class="hover:text-cyan-400 transition">Sảnh</a>
+            <a href="#systems" class="hover:text-cyan-400 transition">Hệ Cơ Quan</a>
+            <a href="#lab" class="hover:text-cyan-400 transition">Phòng Thí Nghiệm</a>
+            <a href="#quiz" class="hover:text-cyan-400 transition">Kiểm Tra</a>
         </div>
-      </div>
-
-      <div class="flashcard">
-        <div class="flash-inner">
-          <div class="flash-front">
-            Não điều khiển gì?
-          </div>
-          <div class="flash-back">
-            Điều khiển toàn bộ hoạt động cơ thể.
-          </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMode()" class="p-2 glass-card rounded-full"><i class="fas fa-moon"></i></button>
+            <button class="bg-cyan-500 px-6 py-2 rounded-full font-bold hover:bg-cyan-400 transition">Đăng Ký</button>
         </div>
-      </div>
-    </div>
-  </section>
+    </nav>
 
-  <footer>
-    <h2>Bio Human Systems</h2>
-    <p>
-      Website học sinh học giao diện neon hiện đại giúp học sinh học nhanh hơn,
-      trực quan hơn và thú vị hơn khi khám phá cơ thể người.
-    </p>
-  </footer>
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 px-10">
+        
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen flex flex-col items-center justify-center text-center">
+            <h1 class="text-7xl font-extrabold mb-6 fade-in">Khám Phá <span class="text-cyan-400">Cơ Thể Người</span></h1>
+            <p class="max-w-2xl text-gray-400 text-lg mb-10">Trải nghiệm học tập sinh học với mô phỏng 3D, trí tuệ nhân tạo và hệ thống tương tác đa chiều.</p>
+            <div class="heart-rate text-red-500">
+                <i class="fas fa-heartbeat text-5xl animate-bounce"></i>
+            </div>
+            <a href="#systems" class="mt-10 px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl font-bold text-xl uppercase tracking-widest hover:scale-110 transition-all">Bắt đầu hành trình</a>
+        </section>
 
-  <script>
-    function scrollToSystems() {
-      document.getElementById('systems').scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
+        <!-- 8 Systems Grid -->
+        <section id="systems" class="py-20">
+            <h2 class="text-4xl font-bold mb-16 border-l-4 border-cyan-400 pl-4">8 Hệ Cơ Quan Trọng Yếu</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="system-grid">
+                <!-- Hệ cơ quan sẽ được render bằng JS -->
+            </div>
+        </section>
 
-    const sparkles = document.getElementById('sparkles');
+        <!-- Lab Area (3D Preview Placeholder) -->
+        <section id="lab" class="py-20">
+            <div class="glass-card p-10 min-h-[600px] relative overflow-hidden">
+                <h3 class="text-3xl font-bold mb-6">Mô Phỏng Anatomy 3D</h3>
+                <div id="3d-viewport" class="w-full h-[500px] bg-black/50 rounded-xl flex items-center justify-center">
+                    <p class="text-cyan-400 animate-pulse">Đang khởi tạo Engine 3D...</p>
+                </div>
+                <!-- Chatbot Overlay -->
+                <div class="absolute bottom-10 right-10 w-80 glass-card p-4">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span class="font-bold">AI Bio-Chatbot</span>
+                    </div>
+                    <div id="chat-box" class="h-40 overflow-y-auto text-sm text-gray-300 mb-2">
+                        Chào Long! Mình là trợ lý sinh học. Bạn muốn tìm hiểu về hệ cơ quan nào?
+                    </div>
+                    <input type="text" placeholder="Hỏi gì đó..." class="w-full bg-white/10 border-none rounded-lg p-2 text-white focus:ring-2 ring-cyan-500">
+                </div>
+            </div>
+        </section>
 
-    for(let i = 0; i < 120; i++) {
-      const spark = document.createElement('div');
-      spark.classList.add('spark');
+    </main>
 
-      spark.style.left = Math.random() * 100 + 'vw';
-      spark.style.top = Math.random() * 100 + 'vh';
-      spark.style.animationDuration = (Math.random() * 5 + 3) + 's';
-      spark.style.opacity = Math.random();
-      spark.style.transform = `scale(${Math.random() * 2})`;
+    <!-- Footer Script Logic -->
+    <script>
+        // 1. Data cho 8 hệ cơ quan
+        const bodySystems = [
+            { name: "Hệ Vận Động", icon: "fa-bone", desc: "Xương và cơ bắp", parts: ["Xương đùi", "Cơ bắp tay"], function: "Nâng đỡ và giúp cơ thể di chuyển." },
+            { name: "Hệ Tuần Hoàn", icon: "fa-heartbeat", desc: "Tim và mạch máu", parts: ["Tim", "Động mạch", "Tĩnh mạch"], function: "Vận chuyển oxy và chất dinh dưỡng." },
+            { name: "Hệ Hô Hấp", icon: "fa-lungs", desc: "Phổi và khí quản", parts: ["Phổi", "Phế quản"], function: "Trao đổi khí O2 và CO2." },
+            { name: "Hệ Tiêu Hóa", icon: "fa-utensils", desc: "Dạ dày và ruột", parts: ["Dạ dày", "Gan", "Ruột non"], function: "Chuyển hóa thức ăn thành năng lượng." },
+            { name: "Hệ Thần Kinh", icon: "fa-brain", desc: "Não và tủy sống", parts: ["Não bộ", "Dây thần kinh"], function: "Điều khiển mọi hoạt động cơ thể." },
+            { name: "Hệ Bài Tiết", icon: "fa-filter", desc: "Thận và bàng quang", parts: ["Thận", "Niệu quản"], function: "Lọc bỏ chất thải khỏi máu." },
+            { name: "Hệ Nội Tiết", icon: "fa-flask", desc: "Các tuyến hormone", parts: ["Tuyến yên", "Tuyến giáp"], function: "Điều hòa quá trình sinh lý." },
+            { name: "Hệ Sinh Sản", icon: "fa-dna", desc: "Duy trì nòi giống", parts: ["Tuyến sinh dục"], function: "Sản sinh tế bào sinh sản." }
+        ];
 
-      sparkles.appendChild(spark);
-    }
+        // 2. Render System Cards
+        const grid = document.getElementById('system-grid');
+        bodySystems.forEach(sys => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-8 cursor-pointer group';
+            card.innerHTML = `
+                <i class="fas ${sys.icon} text-5xl text-cyan-400 mb-6 group-hover:scale-125 transition"></i>
+                <h4 class="text-2xl font-bold mb-2">${sys.name}</h4>
+                <p class="text-gray-400">${sys.desc}</p>
+            `;
+            card.onclick = () => showDetail(sys);
+            grid.appendChild(card);
+        });
 
-    const cards = document.querySelectorAll('.card');
+        function showDetail(sys) {
+            alert(`Đang mở mô hình 3D cho: ${sys.name}\nBộ phận: ${sys.parts.join(', ')}\nChức năng: ${sys.function}`);
+        }
 
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        // 3. Galaxy Particle Background (Three.js)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.2), rgba(255,255,255,0.07))`;
-      });
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        for (let i = 0; i < 5000; i++) {
+            vertices.push(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000));
+        }
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const particles = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x4facfe, size: 2 }));
+        scene.add(particles);
+        camera.position.z = 500;
 
-      card.addEventListener('mouseleave', () => {
-        card.style.background = 'rgba(255,255,255,0.08)';
-      });
-    });
-  
-    setTimeout(() => {
-      document.getElementById('loader').style.display = 'none';
-    }, 3000);
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
 
-    const toggle = document.getElementById('themeToggle');
+        // 4. Loading Timeout
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 2000);
+        });
 
-    toggle.addEventListener('click', () => {
-      document.body.classList.toggle('light');
-    });
+        // 5. Sound Effects (Mô phỏng)
+        function playSound() {
+            const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+            audio.volume = 0.2;
+            audio.play();
+        }
+        document.querySelectorAll('button').forEach(btn => btn.addEventListener('click', playSound));
 
-    function checkAnswer(answer) {
-      const result = document.getElementById('quizResult');
-
-      if(answer === 'tim') {
-        result.innerHTML = '✅ Chính xác!';
-      } else {
-        result.innerHTML = '❌ Sai rồi!';
-      }
-    }
-
-    // AI BIO CHATBOT SIMULATION
-    const bioAnswers = {
-      tim: 'Tim là cơ quan bơm máu.',
-      phoi: 'Phổi giúp trao đổi khí.',
-      nao: 'Não điều khiển cơ thể.'
-    };
-
-    console.log('BIO AI SYSTEM READY');
-
-    // HEART BEAT EFFECT
-    setInterval(() => {
-      document.querySelectorAll('.emoji').forEach(e => {
-        e.style.transform = 'scale(1.15)';
-
-        setTimeout(() => {
-          e.style.transform = 'scale(1)';
-        }, 200);
-      });
-    }, 1000);
-
-    // CELL PARTICLE ENGINE
-    for(let i = 0; i < 200; i++) {
-      const cell = document.createElement('div');
-      cell.style.position = 'fixed';
-      cell.style.width = '8px';
-      cell.style.height = '8px';
-      cell.style.borderRadius = '50%';
-      cell.style.background = 'rgba(255,255,255,0.3)';
-      cell.style.left = Math.random() * 100 + 'vw';
-      cell.style.top = Math.random() * 100 + 'vh';
-      cell.style.pointerEvents = 'none';
-      cell.style.animation = `float ${Math.random()*10+5}s linear infinite`;
-      document.body.appendChild(cell);
-    }
-
-  </script>
-
-  <!-- ================= MEGA EXPANSION SECTION ================= -->
-  <section class="systems">
-    <h2 class="section-title">CHI TIẾT CHUYÊN SÂU</h2>
-    <div class="grid">
-
-      <div class="card">
-        <div class="emoji">❤️</div>
-        <h2>Tim Chuyên Sâu</h2>
-        <div class="part"><h3>Tâm nhĩ phải</h3><p>Nhận máu nghèo oxy từ cơ thể.</p></div>
-        <div class="part"><h3>Tâm thất phải</h3><p>Bơm máu lên phổi để trao đổi khí.</p></div>
-        <div class="part"><h3>Tâm nhĩ trái</h3><p>Nhận máu giàu oxy từ phổi.</p></div>
-        <div class="part"><h3>Tâm thất trái</h3><p>Bơm máu đi khắp cơ thể với lực rất mạnh.</p></div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🫁</div>
-        <h2>Phổi Chuyên Sâu</h2>
-        <div class="part"><h3>Phế quản</h3><p>Đưa không khí vào sâu trong phổi.</p></div>
-        <div class="part"><h3>Phế nang</h3><p>Tăng diện tích trao đổi khí cực lớn.</p></div>
-        <div class="part"><h3>Mao mạch</h3><p>Nhận oxy và thải carbon dioxide.</p></div>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🧠</div>
-        <h2>Não Bộ</h2>
-        <div class="part"><h3>Đại não</h3><p>Điều khiển tư duy và trí nhớ.</p></div>
-        <div class="part"><h3>Tiểu não</h3><p>Giữ thăng bằng và phối hợp động tác.</p></div>
-        <div class="part"><h3>Hành não</h3><p>Điều khiển nhịp tim và hô hấp.</p></div>
-      </div>
-
-    </div>
-  </section>
-
-  <script>
-    const colors = ['#ff00d4','#00d4ff','#ffe600','#00ff88','#7c3aed'];
-
-    setInterval(() => {
-      document.querySelectorAll('.card').forEach(card => {
-        const random = colors[Math.floor(Math.random() * colors.length)];
-        card.style.boxShadow = `0 0 40px ${random}`;
-      });
-    }, 2000);
-
-    for(let i = 0; i < 300; i++) {
-      const floating = document.createElement('div');
-      floating.style.position = 'fixed';
-      floating.style.width = '4px';
-      floating.style.height = '4px';
-      floating.style.borderRadius = '50%';
-      floating.style.background = 'white';
-      floating.style.left = Math.random() * 100 + 'vw';
-      floating.style.top = Math.random() * 100 + 'vh';
-      floating.style.opacity = Math.random();
-      floating.style.pointerEvents = 'none';
-      floating.style.animation = `float ${Math.random() * 8 + 4}s linear infinite`;
-      document.body.appendChild(floating);
-    }
-
-    // GENERATED VISUAL POWER BLOCKS
-    // LINE BOOSTER START
-    // =====================================
-    // ULTRA BIO SYSTEM
-    // ADVANCED HUMAN BODY DATABASE
-    // EXTREME VISUAL ENGINE
-    // NEON GLOW SYSTEM
-    // PARTICLE ENGINE
-    // BIOLOGY KNOWLEDGE CORE
-    // EDUCATION PANEL
-    // SMART CARD SYSTEM
-    // FUTURE UI MODE
-    // SCIENCE VISUALIZATION
-    // HUMAN ANATOMY UI
-    // RGB EFFECT SYSTEM
-    // CYBER SCIENCE DESIGN
-    // ANIMATION CORE
-    // INTERACTIVE CARD ENGINE
-    // RESPONSIVE GRID ENGINE
-    // =====================================
-  </script>
+    </script>
 </body>
 </html>
