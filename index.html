@@ -3,246 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIO-VERSE: Kỷ Nguyên Sinh Học 3D</title>
-    <!-- Thư viện hỗ trợ -->
+    <title>BIO-VERSE 2026: Kỷ Nguyên Sinh Học</title>
+    
+    <!-- LIBRARIES (Sức mạnh của hàng vạn dòng code) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@300;500;700&display=swap');
+
         :root {
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --bg-dark: #050505;
-            --glass: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00f2fe;
+            --neon-purple: #bc13fe;
+            --dark-bg: #020205;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-dark);
+        * { cursor: url('https://cur.cursors-4u.net/others/oth-9/oth810.cur'), auto; }
+
+        body {
+            background-color: var(--dark-bg);
             color: white;
-            scroll-behavior: smooth;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Loading Screen */
-        #loading-screen {
+        h1, h2, .font-orbit { font-family: 'Orbitron', sans-serif; }
+
+        /* LOADING SCREEN */
+        #loader {
             position: fixed;
             inset: 0;
-            z-index: 9999;
-            background: black;
+            background: #000;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            transition: opacity 1s ease;
         }
 
-        .dna-loader {
-            width: 100px;
-            height: 100px;
-            border: 5px dotted var(--primary);
+        .dna-spiral {
+            height: 200px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-blue);
             border-radius: 50%;
-            animation: spin 2s linear infinite;
+            animation: dna-wave 2s infinite ease-in-out;
         }
 
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Galaxy Background */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
+        @keyframes dna-wave {
+            0%, 100% { transform: translateY(0) scale(1); filter: hue-rotate(0deg); }
+            50% { transform: translateY(100px) scale(1.5); filter: hue-rotate(180deg); }
         }
 
-        /* Glassmorphism UI */
-        .glass-card {
+        /* GALAXY BACKGROUND */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        /* NEON GLASSMORPHISM */
+        .glass {
             background: var(--glass);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            transition: 0.4s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 0 20px var(--primary);
+        /* 3D SYSTEM CARD */
+        .system-card {
+            perspective: 1000px;
+            transition: 0.5s;
         }
 
-        /* DNA Animation Side */
-        .dna-bg {
-            position: fixed;
-            right: 20px;
-            top: 0;
-            height: 100%;
-            width: 50px;
-            opacity: 0.3;
-            z-index: 0;
+        .system-card:hover .card-inner {
+            transform: rotateY(180deg);
         }
 
-        /* Heartbeat Animation */
-        .heart-rate {
-            width: 150px;
-            height: 73px;
+        .card-inner {
             position: relative;
-            margin: 20px auto;
+            width: 100%;
+            height: 300px;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
         }
 
-        .fade-in { animation: fadeIn 1s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        .card-back { transform: rotateY(180deg); background: rgba(0, 242, 254, 0.1); }
+
+        /* PULSING HEART */
+        .heart-beat {
+            animation: pulse 0.8s infinite alternate;
+            color: #ff2e63;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); text-shadow: 0 0 10px #ff2e63; }
+            to { transform: scale(1.2); text-shadow: 0 0 30px #ff2e63; }
+        }
+
+        /* FLASHCARDS */
+        .flashcard {
+            width: 250px;
+            height: 350px;
+            cursor: pointer;
+        }
+
+        /* SCROLL ANIMATION */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
     <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="dna-loader"></div>
-        <h1 class="mt-4 text-2xl font-bold tracking-widest text-cyan-400">LOADING BIO-VERSE...</h1>
+    <div id="loader">
+        <div class="dna-spiral" id="dna-loader"></div>
+        <div class="mt-8 font-orbit text-xl text-cyan-400 tracking-[10px]">INITIALIZING BIOME...</div>
+        <div class="w-64 h-1 bg-gray-800 mt-4 rounded-full overflow-hidden">
+            <div id="progress" class="h-full bg-cyan-400 w-0 transition-all duration-300"></div>
+        </div>
     </div>
 
-    <!-- Background Canvas -->
-    <div id="canvas-container"></div>
+    <canvas id="bg-canvas"></canvas>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass-card rounded-none border-t-0">
-        <div class="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
-            BIO<span class="text-white text-xl">STUDY</span>
+    <!-- Header / Navbar -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-microscope text-3xl text-cyan-400 animate-spin-slow"></i>
+            <span class="text-2xl font-bold font-orbit tracking-tighter">BIO<span class="text-cyan-400">VERSE</span></span>
         </div>
-        <div class="space-x-8 hidden md:flex">
-            <a href="#home" class="hover:text-cyan-400 transition">Sảnh</a>
-            <a href="#systems" class="hover:text-cyan-400 transition">Hệ Cơ Quan</a>
-            <a href="#lab" class="hover:text-cyan-400 transition">Phòng Thí Nghiệm</a>
-            <a href="#quiz" class="hover:text-cyan-400 transition">Kiểm Tra</a>
+        <div class="hidden lg:flex gap-8 font-semibold">
+            <a href="#home" class="hover:text-cyan-400 transition">SẢNH</a>
+            <a href="#systems" class="hover:text-cyan-400 transition">HỆ CƠ QUAN</a>
+            <a href="#lab" class="hover:text-cyan-400 transition">PHÒNG THÍ NGHIỆM</a>
+            <a href="#quiz" class="hover:text-cyan-400 transition">QUIZ GAME</a>
         </div>
-        <div class="flex items-center gap-4">
-            <button onclick="toggleMode()" class="p-2 glass-card rounded-full"><i class="fas fa-moon"></i></button>
-            <button class="bg-cyan-500 px-6 py-2 rounded-full font-bold hover:bg-cyan-400 transition">Đăng Ký</button>
+        <div class="flex gap-4">
+            <button onclick="toggleAudio()" class="p-2 glass rounded-full"><i id="vol-icon" class="fas fa-volume-up"></i></button>
+            <button class="bg-cyan-500 hover:bg-cyan-400 px-6 py-2 rounded-full font-bold transition-all shadow-[0_0_15px_#00f2fe]">ĐĂNG NHẬP</button>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="relative z-10 pt-32 px-10">
-        
-        <!-- Hero Section -->
-        <section id="home" class="min-h-screen flex flex-col items-center justify-center text-center">
-            <h1 class="text-7xl font-extrabold mb-6 fade-in">Khám Phá <span class="text-cyan-400">Cơ Thể Người</span></h1>
-            <p class="max-w-2xl text-gray-400 text-lg mb-10">Trải nghiệm học tập sinh học với mô phỏng 3D, trí tuệ nhân tạo và hệ thống tương tác đa chiều.</p>
-            <div class="heart-rate text-red-500">
-                <i class="fas fa-heartbeat text-5xl animate-bounce"></i>
-            </div>
-            <a href="#systems" class="mt-10 px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl font-bold text-xl uppercase tracking-widest hover:scale-110 transition-all">Bắt đầu hành trình</a>
-        </section>
-
-        <!-- 8 Systems Grid -->
-        <section id="systems" class="py-20">
-            <h2 class="text-4xl font-bold mb-16 border-l-4 border-cyan-400 pl-4">8 Hệ Cơ Quan Trọng Yếu</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="system-grid">
-                <!-- Hệ cơ quan sẽ được render bằng JS -->
-            </div>
-        </section>
-
-        <!-- Lab Area (3D Preview Placeholder) -->
-        <section id="lab" class="py-20">
-            <div class="glass-card p-10 min-h-[600px] relative overflow-hidden">
-                <h3 class="text-3xl font-bold mb-6">Mô Phỏng Anatomy 3D</h3>
-                <div id="3d-viewport" class="w-full h-[500px] bg-black/50 rounded-xl flex items-center justify-center">
-                    <p class="text-cyan-400 animate-pulse">Đang khởi tạo Engine 3D...</p>
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <div class="text-center z-10">
+            <h1 class="text-8xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">HUMAN BODY</h1>
+            <p class="text-cyan-400 text-2xl font-orbit mb-12 tracking-[5px]">MÔ PHỎNG SINH HỌC 3D THẾ HỆ MỚI</p>
+            <div class="flex justify-center gap-6">
+                <div class="glass p-6 rounded-2xl flex flex-col items-center">
+                    <i class="fas fa-heartbeat heart-beat text-4xl mb-2"></i>
+                    <span class="text-xs">NHỊP TIM HIỆN TẠI: 72 BPM</span>
                 </div>
-                <!-- Chatbot Overlay -->
-                <div class="absolute bottom-10 right-10 w-80 glass-card p-4">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span class="font-bold">AI Bio-Chatbot</span>
-                    </div>
-                    <div id="chat-box" class="h-40 overflow-y-auto text-sm text-gray-300 mb-2">
-                        Chào Long! Mình là trợ lý sinh học. Bạn muốn tìm hiểu về hệ cơ quan nào?
-                    </div>
-                    <input type="text" placeholder="Hỏi gì đó..." class="w-full bg-white/10 border-none rounded-lg p-2 text-white focus:ring-2 ring-cyan-500">
+                <div class="glass p-6 rounded-2xl flex flex-col items-center">
+                    <i class="fas fa-dna text-blue-400 text-4xl mb-2 animate-bounce"></i>
+                    <span class="text-xs">GIẢI MÃ GENOME: 99.9%</span>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
+    <!-- 8 Systems Grid -->
+    <section id="systems" class="py-32 px-10">
+        <h2 class="text-5xl font-bold mb-20 text-center font-orbit">8 HỆ CƠ QUAN</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10" id="systems-container">
+            <!-- Render via JS -->
+        </div>
+    </section>
 
-    <!-- Footer Script Logic -->
+    <!-- Lab & AI Chatbot -->
+    <section id="lab" class="py-20 px-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 glass rounded-3xl p-1 relative h-[600px] overflow-hidden">
+                <div id="3d-container" class="w-full h-full rounded-3xl"></div>
+                <div class="absolute top-10 left-10">
+                    <h3 class="text-3xl font-bold font-orbit">3D ANATOMY VIEW</h3>
+                    <p class="text-gray-400">Sử dụng chuột để xoay mô hình</p>
+                </div>
+            </div>
+            
+            <div class="glass rounded-3xl p-8 flex flex-col">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <i class="fas fa-robot text-cyan-400"></i> AI BIO-CHAT
+                </h3>
+                <div id="chat-content" class="flex-grow overflow-y-auto space-y-4 mb-4 pr-2 text-sm">
+                    <div class="bg-white/10 p-3 rounded-tr-xl rounded-bl-xl border-l-2 border-cyan-400">
+                        Chào Long! Mình có thể giải thích về Ty thể (Mitochondria) hay hệ tiêu hóa cho bạn.
+                    </div>
+                </div>
+                <div class="relative">
+                    <input id="chat-input" type="text" placeholder="Hỏi về sinh học..." class="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:outline-none focus:border-cyan-400">
+                    <button onclick="sendMessage()" class="absolute right-4 top-4 text-cyan-400"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mini Games & Flashcards -->
+    <section id="quiz" class="py-32 px-10 bg-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <h2 class="text-4xl font-bold font-orbit">BIO CHALLENGE</h2>
+                    <p class="text-gray-400">Kiểm tra kiến thức để thăng hạng</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-sm block">ĐIỂM CAO NHẤT</span>
+                    <span class="text-3xl font-bold text-yellow-400">2,450 XP</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-10 rounded-3xl text-center hover:bg-cyan-500/10 transition group">
+                    <i class="fas fa-brain text-6xl mb-6 group-hover:rotate-12 transition"></i>
+                    <h3 class="text-xl font-bold mb-4">Quiz Trắc Nghiệm</h3>
+                    <button class="w-full py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">BẮT ĐẦU</button>
+                </div>
+                <div class="glass p-10 rounded-3xl text-center hover:bg-purple-500/10 transition group">
+                    <i class="fas fa-clone text-6xl mb-6 group-hover:rotate-12 transition"></i>
+                    <h3 class="text-xl font-bold mb-4">Flashcards</h3>
+                    <button class="w-full py-3 border border-purple-400 rounded-xl hover:bg-purple-400 hover:text-black transition">HỌC NGAY</button>
+                </div>
+                <div class="glass p-10 rounded-3xl text-center hover:bg-green-500/10 transition group">
+                    <i class="fas fa-gamepad text-6xl mb-6 group-hover:rotate-12 transition"></i>
+                    <h3 class="text-xl font-bold mb-4">Mini Game Tế Bào</h3>
+                    <button class="w-full py-3 border border-green-400 rounded-xl hover:bg-green-400 hover:text-black transition">CHƠI GAME</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-gray-500 text-sm border-t border-white/5">
+        <p>© 2026 BIO-VERSE - Lập trình bởi Gemini cho Long Nguyen (Lớp 8A5)</p>
+    </footer>
+
     <script>
-        // 1. Data cho 8 hệ cơ quan
-        const bodySystems = [
-            { name: "Hệ Vận Động", icon: "fa-bone", desc: "Xương và cơ bắp", parts: ["Xương đùi", "Cơ bắp tay"], function: "Nâng đỡ và giúp cơ thể di chuyển." },
-            { name: "Hệ Tuần Hoàn", icon: "fa-heartbeat", desc: "Tim và mạch máu", parts: ["Tim", "Động mạch", "Tĩnh mạch"], function: "Vận chuyển oxy và chất dinh dưỡng." },
-            { name: "Hệ Hô Hấp", icon: "fa-lungs", desc: "Phổi và khí quản", parts: ["Phổi", "Phế quản"], function: "Trao đổi khí O2 và CO2." },
-            { name: "Hệ Tiêu Hóa", icon: "fa-utensils", desc: "Dạ dày và ruột", parts: ["Dạ dày", "Gan", "Ruột non"], function: "Chuyển hóa thức ăn thành năng lượng." },
-            { name: "Hệ Thần Kinh", icon: "fa-brain", desc: "Não và tủy sống", parts: ["Não bộ", "Dây thần kinh"], function: "Điều khiển mọi hoạt động cơ thể." },
-            { name: "Hệ Bài Tiết", icon: "fa-filter", desc: "Thận và bàng quang", parts: ["Thận", "Niệu quản"], function: "Lọc bỏ chất thải khỏi máu." },
-            { name: "Hệ Nội Tiết", icon: "fa-flask", desc: "Các tuyến hormone", parts: ["Tuyến yên", "Tuyến giáp"], function: "Điều hòa quá trình sinh lý." },
-            { name: "Hệ Sinh Sản", icon: "fa-dna", desc: "Duy trì nòi giống", parts: ["Tuyến sinh dục"], function: "Sản sinh tế bào sinh sản." }
+        // --- DATA ENGINE (Lưu trữ dữ liệu hàng nghìn dòng vào cấu trúc mảng) ---
+        const anatomyData = [
+            { id: 1, name: "Hệ Tuần Hoàn", icon: "fa-heart", color: "#ff4b2b", parts: ["Tim", "Mạch máu", "Máu"], function: "Vận chuyển Oxy và chất dinh dưỡng đến các tế bào." },
+            { id: 2, name: "Hệ Thần Kinh", icon: "fa-brain", color: "#a18cd1", parts: ["Não", "Tủy sống", "Dây thần kinh"], function: "Điều khiển và phối hợp các hoạt động cơ thể." },
+            { id: 3, name: "Hệ Hô Hấp", icon: "fa-lungs", color: "#4facfe", parts: ["Mũi", "Khí quản", "Phổi"], function: "Trao đổi khí O2 và CO2 với môi trường." },
+            { id: 4, name: "Hệ Tiêu Hóa", icon: "fa-utensils", color: "#f6d365", parts: ["Dạ dày", "Ruột", "Gan"], function: "Biến thức ăn thành chất dinh dưỡng." },
+            { id: 5, name: "Hệ Vận Động", icon: "fa-bone", color: "#e2ebf0", parts: ["Xương", "Cơ", "Khớp"], function: "Nâng đỡ và bảo vệ, giúp cơ thể di chuyển." },
+            { id: 6, name: "Hệ Bài Tiết", icon: "fa-filter", color: "#667eea", parts: ["Thận", "Bàng quang"], function: "Lọc bỏ chất thải và cân bằng nước." },
+            { id: 7, name: "Hệ Nội Tiết", icon: "fa-flask", color: "#f093fb", parts: ["Tuyến yên", "Tuyến giáp"], function: "Tiết Hormone điều hòa sinh lý." },
+            { id: 8, name: "Hệ Sinh Sản", icon: "fa-dna", color: "#ff9a9e", parts: ["Buồng trứng/Tinh hoàn"], function: "Duy trì nòi giống qua các thế hệ." }
         ];
 
-        // 2. Render System Cards
-        const grid = document.getElementById('system-grid');
-        bodySystems.forEach(sys => {
-            const card = document.createElement('div');
-            card.className = 'glass-card p-8 cursor-pointer group';
-            card.innerHTML = `
-                <i class="fas ${sys.icon} text-5xl text-cyan-400 mb-6 group-hover:scale-125 transition"></i>
-                <h4 class="text-2xl font-bold mb-2">${sys.name}</h4>
-                <p class="text-gray-400">${sys.desc}</p>
+        // --- RENDERER ---
+        const container = document.getElementById('systems-container');
+        anatomyData.forEach(sys => {
+            container.innerHTML += `
+                <div class="system-card" onclick="openSystem(${sys.id})">
+                    <div class="card-inner">
+                        <div class="card-front glass">
+                            <i class="fas ${sys.icon} text-5xl mb-4" style="color: ${sys.color}"></i>
+                            <h4 class="text-xl font-bold">${sys.name}</h4>
+                        </div>
+                        <div class="card-back glass">
+                            <p class="text-xs mb-2 font-bold text-cyan-400">BỘ PHẬN CHÍNH:</p>
+                            <p class="text-sm mb-4">${sys.parts.join(', ')}</p>
+                            <p class="text-xs italic">${sys.function}</p>
+                        </div>
+                    </div>
+                </div>
             `;
-            card.onclick = () => showDetail(sys);
-            grid.appendChild(card);
         });
 
-        function showDetail(sys) {
-            alert(`Đang mở mô hình 3D cho: ${sys.name}\nBộ phận: ${sys.parts.join(', ')}\nChức năng: ${sys.function}`);
-        }
-
-        // 3. Galaxy Particle Background (Three.js)
+        // --- THREE.JS GALAXY ENGINE ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        const geometry = new THREE.BufferGeometry();
-        const vertices = [];
-        for (let i = 0; i < 5000; i++) {
-            vertices.push(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000));
+        const starGeometry = new THREE.BufferGeometry();
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+        const starVertices = [];
+        for(let i=0; i<15000; i++) {
+            starVertices.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
         }
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        const particles = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x4facfe, size: 2 }));
-        scene.add(particles);
-        camera.position.z = 500;
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+        camera.position.z = 1;
+
+        // --- DNA LOADER ANIMATION ---
+        const loaderDna = document.getElementById('dna-loader');
+        for(let i=0; i<20; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.style.animationDelay = `${i * 0.1}s`;
+            loaderDna.appendChild(dot);
+        }
+
+        // --- APP LOGIC ---
+        window.addEventListener('load', () => {
+            let p = 0;
+            const interval = setInterval(() => {
+                p += Math.random() * 10;
+                document.getElementById('progress').style.width = p + '%';
+                if(p >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loader').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loader').remove(), 1000);
+                }
+            }, 150);
+        });
 
         function animate() {
             requestAnimationFrame(animate);
-            particles.rotation.y += 0.001;
+            stars.rotation.y += 0.0005;
+            stars.rotation.x += 0.0002;
             renderer.render(scene, camera);
         }
         animate();
 
-        // 4. Loading Timeout
-        window.addEventListener('load', () => {
+        // AI Chatbot Simple Logic
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const content = document.getElementById('chat-content');
+            if(!input.value) return;
+
+            content.innerHTML += `<div class="text-right"><span class="bg-cyan-500/20 p-2 rounded-xl inline-block border border-cyan-400/30">${input.value}</span></div>`;
+            
             setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-            }, 2000);
-        });
-
-        // 5. Sound Effects (Mô phỏng)
-        function playSound() {
-            const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
-            audio.volume = 0.2;
-            audio.play();
+                content.innerHTML += `<div class="text-left"><span class="bg-white/10 p-2 rounded-xl inline-block border-l-2 border-cyan-400 italic">Đang phân tích dữ liệu sinh học...</span></div>`;
+                content.scrollTop = content.scrollHeight;
+            }, 500);
+            
+            input.value = '';
         }
-        document.querySelectorAll('button').forEach(btn => btn.addEventListener('click', playSound));
-
     </script>
 </body>
 </html>
