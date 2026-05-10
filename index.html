@@ -3,357 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biology 9 | Hoang Long Edition</title>
+    <title>Biology 9 | Hoang Long Archive</title>
     <style>
         /* ================= VARIABLES & RESET ================= */
         :root {
-            --bg-color: #020205;
-            --primary: #00f3ff;
-            --secondary: #00ff66;
-            --glass-bg: rgba(10, 15, 30, 0.7);
-            --glass-border: rgba(0, 243, 255, 0.2);
-            --text-main: #e0f7fa;
-            --text-dim: #8ab4f8;
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-color: #fcfaf5; /* Màu giấy kem nhạt */
+            --primary-green: #2d5a27; /* Xanh lá đậm học thuật */
+            --soft-green: #e8f5e9;
+            --accent-wood: #8d6e63;
+            --text-dark: #2c3e50;
+            --text-light: #5d6d7e;
+            --font-main: 'Segoe UI', 'Palatino Linotype', serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* Custom cursor */
         }
 
         body {
             background-color: var(--bg-color);
-            /* NỀN TĨNH: Radial Gradient & Cyber Grid */
+            /* NỀN TĨNH: Họa tiết giấy nhẹ nhàng */
             background-image: 
-                radial-gradient(circle at 50% 50%, #0a0a2a 0%, #020205 100%),
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 45px 45px, 45px 45px;
-            background-attachment: fixed;
-            color: var(--text-main);
+                radial-gradient(var(--soft-green) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text-dark);
             font-family: var(--font-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* ================= CUSTOM CURSOR ================= */
-        .cursor-dot, .cursor-outline {
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
-        }
-        .cursor-outline {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(0, 243, 255, 0.5);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            line-height: 1.6;
         }
 
         /* ================= HEADER ================= */
         header {
-            padding: 1.5rem 5%;
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(2, 2, 5, 0.85);
-            position: fixed;
-            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--primary-green);
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* ================= HERO SECTION ================= */
         .hero {
-            padding: 160px 5% 40px;
+            padding: 80px 5% 40px;
             text-align: center;
+            background: linear-gradient(to bottom, #f1f8e9, var(--bg-color));
         }
 
         .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            background: linear-gradient(to bottom, #ffffff 30%, var(--text-dim));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.2));
+            font-size: 3.5rem;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+            font-family: 'Georgia', serif;
         }
 
-        .typing-text {
-            font-size: 1.1rem;
-            color: var(--secondary);
-            opacity: 0.9;
-            letter-spacing: 2px;
-            min-height: 25px;
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* ================= SEARCH ================= */
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 25px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 20px rgba(45, 90, 39, 0.15);
         }
 
         /* ================= MAIN GRID ================= */
         main {
             padding: 40px 5% 100px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 500px;
-            display: block;
-            margin: 0 auto 60px;
-            padding: 16px 25px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .search-box:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 25px rgba(0,243,255,0.15);
-            background: rgba(255,255,255,0.06);
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         /* ================= CARD DESIGN ================= */
-        .cyber-card {
+        .bio-card {
             text-decoration: none;
-            perspective: 1000px;
-        }
-
-        .card-inner {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 30px;
-            height: 100%;
+            color: inherit;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
             display: flex;
             flex-direction: column;
-            transition: transform 0.15s ease, border-color 0.4s;
-            transform-style: preserve-3d;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
         }
 
-        .card-inner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,243,255,0.12) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
+        .bio-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-green);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
 
-        .cyber-card:hover .card-inner {
-            border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .card-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
         }
-        .cyber-card:hover .card-inner::before { opacity: 1; }
 
         .card-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #fff;
-            line-height: 1.4;
-            transform: translateZ(25px);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 10px;
         }
 
         .card-desc {
-            font-size: 0.95rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
             flex-grow: 1;
-            transform: translateZ(15px);
         }
 
-        .card-btn {
-            padding: 12px;
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.85rem;
+        .card-meta {
+            font-size: 0.8rem;
             font-weight: bold;
+            color: var(--accent-wood);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            transform: translateZ(10px);
-        }
-
-        .cyber-card:hover .card-btn {
-            background: var(--secondary);
-            color: #020205;
-            box-shadow: 0 0 15px var(--secondary);
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         /* ================= FOOTER ================= */
         footer {
             text-align: center;
-            padding: 80px 20px;
-            color: var(--text-dim);
-            font-size: 1rem;
-            border-top: 1px solid var(--glass-border);
-            letter-spacing: 1px;
-            background: rgba(0,0,0,0.3);
+            padding: 60px 20px;
+            background: #f1f3f4;
+            color: var(--text-light);
+            border-top: 1px solid #e0e0e0;
         }
 
-        .author-name {
-            color: #fff;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 10px;
-            display: block;
+        .author {
+            color: var(--primary-green);
+            font-weight: 800;
             font-size: 1.1rem;
+            margin-top: 8px;
+            display: block;
+            letter-spacing: 0.5px;
         }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
-            .logo { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-outline" id="cursor-outline"></div>
-
     <header>
-        <div class="logo">BIOLOGY 9</div>
-        <div style="color: var(--primary); font-size: 0.8rem; font-weight: bold; letter-spacing: 2px;">RESOURCES HUB</div>
+        <div class="logo">🌿 Biology 9</div>
+        <div style="font-size: 0.9rem; color: var(--text-light);">Thư viện học liệu điện tử</div>
     </header>
 
     <section class="hero">
-        <h1>Biology 9</h1>
-        <div class="typing-text" id="typing-text"></div>
+        <h1>Biology 9 📖</h1>
+        <p class="hero-subtitle">"Khám phá thế giới qua lăng kính khoa học sự sống"</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-box" id="search-input" placeholder="Tìm tên đề thi, sách, tài liệu... 🔍">
+        </div>
     </section>
 
     <main>
-        <input type="text" class="search-box" id="search-input" placeholder="Tìm kiếm học liệu...">
-        <div class="cards-grid" id="cards-container"></div>
+        <div class="cards-grid" id="cards-container">
+            </div>
     </main>
 
     <footer>
-        <p>Hệ thống tài liệu trực tuyến chuyên sâu</p>
-        <span class="author-name">Created by Nguyễn Hoàng Long🔥</span>
+        <p>Học tập là một hành trình không ngừng nghỉ 🔬</p>
+        <span class="author">Created by Nguyễn Hoàng Long🔥</span>
     </footer>
 
     <script>
-        /* ================= CURSOR LOGIC ================= */
-        const dot = document.getElementById('cursor-dot');
-        const outline = document.getElementById('cursor-outline');
-
-        window.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px';
-            dot.style.top = e.clientY + 'px';
-            setTimeout(() => {
-                outline.style.left = e.clientX + 'px';
-                outline.style.top = e.clientY + 'px';
-            }, 50);
-        });
-
-        /* ================= DATA ================= */
         const cardData = [
-            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tổng hợp đề thi HSG Sinh học lớp 8 cấp trường." },
-            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Kho lưu trữ Drive tổng hợp đề thi HSG các cấp." },
-            { title: "SÁCH BD HSG SINH 9 - PHAN KHẮC NGHỆ", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Giáo trình bồi dưỡng chuyên sâu Sinh học 9." },
-            { title: "SÁCH BD HSG SINH 9 - HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Tài liệu bồi dưỡng HSG chuyên Sinh 9." },
-            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER1)", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Cấu trúc đề thi minh họa THPT 2026 lần 1." },
-            { title: "SÁCH 60 ĐỀ MINH HOẠ SINH 2026", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Bộ đề chuẩn từ Moonbook cho kỳ thi 2026." },
-            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER2)", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Cấu trúc đề thi minh họa THPT 2026 lần 2." },
-            { title: "NGƯỜI DÙNG CHIA SẺ TÀI LIỆU", url: "https://www.threads.com/@ha_mini19", desc: "Kênh chia sẻ tài liệu học tập đa môn học." },
-            { title: "ÔN THI CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Bộ đề chọn đội tuyển Olympic Sinh học quốc tế." },
-            { title: "24 ĐỀ THI THỬ SINH 2025 (VER1)", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tổng hợp đề thi thử các trường và sở GD 2025." },
-            { title: "24 ĐỀ THI THỬ SINH 2025 (VER2)", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Bổ sung các đề thi thử Sinh học chất lượng." },
-            { title: "TỔNG HỢP 65 ĐỀ THI THỬ", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Tập hợp 65 đề thi thử môn Sinh học chọn lọc." },
-            { title: "TÀI LIỆU ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Dữ liệu ôn thi học sinh giỏi lớp 10, 11 và 12." }
+            { emoji: "📝", title: "ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/...", desc: "Tổng hợp các dạng bài tập bồi dưỡng HSG cấp trường." },
+            { emoji: "📂", title: "KHO ĐỀ TỔNG HỢP", url: "https://drive.google.com/...", desc: "Dữ liệu đề thi Sinh học phong phú từ nhiều nguồn." },
+            { emoji: "📚", title: "SÁCH PHAN KHẮC NGHỆ", url: "https://drive.google.com/...", desc: "Tài liệu chuyên sâu cho học sinh ôn thi chuyên." },
+            { emoji: "📖", title: "SÁCH HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/...", desc: "Hướng dẫn giải chi tiết các chuyên đề Sinh lớp 9." },
+            { emoji: "🧬", title: "ĐỀ MINH HOẠ THPT 2026", url: "https://drive.google.com/...", desc: "Cập nhật cấu trúc thi mới nhất của Bộ Giáo dục." },
+            { emoji: "📑", title: "MOONBOOK - 60 ĐỀ 2026", url: "https://drive.google.com/...", desc: "Luyện giải đề trắc nghiệm Sinh học 2026." },
+            { emoji: "🧪", title: "ÔN CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/...", desc: "Bộ 21 đề chọn đội tuyển Olympic quốc tế." },
+            { emoji: "🏫", title: "ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/...", desc: "Tài liệu nâng cao dành cho khối THPT chuyên." }
         ];
 
-        /* ================= RENDER CARDS ================= */
         const container = document.getElementById('cards-container');
 
         cardData.forEach(data => {
-            const link = document.createElement('a');
-            link.href = data.url;
-            link.target = "_blank";
-            link.className = "cyber-card";
-            link.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-title">${data.title}</div>
-                    <div class="card-desc">${data.desc}</div>
-                    <div class="card-btn">Truy cập ngay</div>
-                </div>
+            const card = document.createElement('a');
+            card.href = data.url;
+            card.target = "_blank";
+            card.className = "bio-card";
+            card.innerHTML = `
+                <span class="card-emoji">${data.emoji}</span>
+                <div class="card-title">${data.title}</div>
+                <div class="card-desc">${data.desc}</div>
+                <div class="card-meta">Đọc tài liệu ➜</div>
             `;
-
-            // 3D Tilt Effect
-            link.addEventListener('mousemove', (e) => {
-                const inner = link.querySelector('.card-inner');
-                const rect = link.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                inner.style.setProperty('--x', (x / rect.width) * 100 + '%');
-                inner.style.setProperty('--y', (y / rect.height) * 100 + '%');
-                inner.style.transform = `perspective(1000px) rotateX(${(centerY - y) / 12}deg) rotateY(${(x - centerX) / 12}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-
-            link.addEventListener('mouseleave', () => {
-                link.querySelector('.card-inner').style.transform = `rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-            });
-
-            container.appendChild(link);
+            container.appendChild(card);
         });
 
-        /* ================= SEARCH LOGIC ================= */
+        // Search logic đơn giản
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            document.querySelectorAll('.cyber-card').forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(term) ? 'block' : 'none';
+            document.querySelectorAll('.bio-card').forEach(card => {
+                card.style.display = card.textContent.toLowerCase().includes(term) ? 'flex' : 'none';
             });
         });
-
-        /* ================= TYPING ANIMATION ================= */
-        const msg = "Database initialized... Accessing Biological Resources.";
-        let i = 0;
-        function typeEffect() {
-            if (i < msg.length) {
-                document.getElementById('typing-text').innerHTML += msg.charAt(i);
-                i++;
-                setTimeout(typeEffect, 60);
-            }
-        }
-        setTimeout(typeEffect, 800);
     </script>
 </body>
 </html>
