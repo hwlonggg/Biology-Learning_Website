@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biology 9 | Specialized In Biology</title>
+    <title>BioX Portal | Static Premium Edition</title>
     <style>
         /* ================= VARIABLES & RESET ================= */
         :root {
-            --bg-color: #050508;
+            --bg-color: #020205;
             --primary: #00f3ff;
             --secondary: #00ff66;
             --accent: #ff00ff;
-            --glass-bg: rgba(10, 15, 30, 0.4);
+            --glass-bg: rgba(10, 15, 30, 0.6);
             --glass-border: rgba(0, 243, 255, 0.2);
             --text-main: #e0f7fa;
             --text-dim: #8ab4f8;
@@ -22,16 +22,22 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* Custom cursor */
+            cursor: none;
         }
 
         body {
             background-color: var(--bg-color);
+            /* NỀN TĨNH: Kết hợp Radial Gradient và lưới Cyber Grid mờ */
+            background-image: 
+                radial-gradient(circle at 50% 50%, #0a0a2a 0%, #020205 100%),
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            background-attachment: fixed;
             color: var(--text-main);
             font-family: var(--font-main);
             overflow-x: hidden;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
         }
 
         /* ================= CUSTOM CURSOR ================= */
@@ -53,672 +59,299 @@
             border: 1px solid rgba(0, 243, 255, 0.5);
             transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
-        
-        /* ================= CANVAS BACKGROUND ================= */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a0a2a 0%, #020205 100%);
-        }
 
-        /* ================= HEADER & HERO ================= */
+        /* ================= HEADER ================= */
         header {
-            padding: 2rem 5%;
+            padding: 1.5rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to bottom, rgba(5,5,8,0.9), transparent);
+            background: rgba(2, 2, 5, 0.8);
             position: fixed;
             width: 100%;
             z-index: 100;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--glass-border);
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .logo svg {
-            width: 40px; height: 40px;
-            fill: url(#grad);
-            animation: spin 10s linear infinite;
-        }
-
+        /* ================= HERO SECTION ================= */
         .hero {
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 160px 5% 60px;
             text-align: center;
-            padding-top: 100px;
             position: relative;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 30px rgba(0, 255, 102, 0.5);
+            letter-spacing: 4px;
+            background: linear-gradient(to bottom, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .typing-text {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--primary);
-            min-height: 40px;
-            margin-bottom: 30px;
-            border-right: 2px solid var(--primary);
-            padding-right: 5px;
-            animation: blink 0.7s infinite;
+            min-height: 30px;
+            margin-bottom: 40px;
+            opacity: 0.8;
         }
 
-        .stats-panel {
-            display: flex;
-            gap: 30px;
-            margin-top: 40px;
-            padding: 20px 40px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,243,255,0.1);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-        .stat-value { font-size: 2rem; color: var(--secondary); font-weight: bold; }
-        .stat-label { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-
-        /* ================= MAIN CONTENT & GRID ================= */
+        /* ================= MAIN GRID ================= */
         main {
-            padding: 50px 5%;
-            max-width: 1600px;
+            padding: 0 5% 100px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
         .search-box {
-            flex: 1;
-            min-width: 300px;
-            padding: 15px 25px;
-            background: rgba(255,255,255,0.02);
+            width: 100%;
+            max-width: 600px;
+            display: block;
+            margin: 0 auto 60px;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
-            border-radius: 50px;
+            border-radius: 12px;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            transition: 0.3s;
         }
 
         .search-box:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0,243,255,0.3), inset 0 0 15px rgba(0,243,255,0.1);
+            box-shadow: 0 0 20px rgba(0,243,255,0.1);
+            background: rgba(255,255,255,0.05);
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
         }
 
         /* ================= CARD DESIGN ================= */
         .cyber-card {
-            background: linear-gradient(135deg, rgba(10,15,30,0.8), rgba(5,5,15,0.9));
-            border-radius: 20px;
-            padding: 1px; /* For gradient border */
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease;
             text-decoration: none;
-            color: white;
-            display: flex;
-            flex-direction: column;
+            perspective: 1000px;
         }
 
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 20px;
-            padding: 2px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        .cyber-card:hover::before { opacity: 1; }
-
-        .card-content {
+        .card-inner {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 19px;
-            padding: 25px;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 30px;
             height: 100%;
             display: flex;
             flex-direction: column;
-            transform: translateZ(30px); /* 3D depth */
-            overflow: hidden;
-            position: relative;
-        }
-
-        .card-image-container {
-            height: 160px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background: #000;
+            transition: transform 0.1s ease, border-color 0.3s;
+            transform-style: preserve-3d;
             position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .card-image-container::after {
+        .card-inner::after {
             content: '';
             position: absolute;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(0,243,255,0.2) 0%, transparent 70%);
-            animation: pulseBg 4s infinite alternate;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,243,255,0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
+        .cyber-card:hover .card-inner {
+            border-color: var(--primary);
+        }
+        .cyber-card:hover .card-inner::after { opacity: 1; }
+
         .card-icon {
-            width: 60px; height: 60px;
-            z-index: 2;
-            filter: drop-shadow(0 0 10px var(--primary));
+            width: 45px; height: 45px;
+            margin-bottom: 20px;
+            fill: var(--primary);
+            filter: drop-shadow(0 0 8px var(--primary));
         }
 
         .card-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            color: #fff;
             line-height: 1.4;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0,243,255,0.3);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            transform: translateZ(20px);
         }
 
         .card-desc {
             font-size: 0.9rem;
             color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 25px;
             flex-grow: 1;
-            margin-bottom: 20px;
         }
 
         .card-btn {
-            background: transparent;
+            padding: 10px;
             border: 1px solid var(--secondary);
             color: var(--secondary);
-            padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.8rem;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .card-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,255,102,0.4), transparent);
-            transition: left 0.5s;
+            transition: 0.3s;
         }
 
         .cyber-card:hover .card-btn {
-            background: rgba(0,255,102,0.1);
-            box-shadow: 0 0 20px rgba(0,255,102,0.2);
+            background: var(--secondary);
+            color: #000;
         }
 
-        .cyber-card:hover .card-btn::before { left: 100%; }
-
-        /* Ripple Effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(0, 243, 255, 0.4);
-            transform: scale(0);
-            animation: ripple-anim 0.6s linear;
-            pointer-events: none;
-        }
-
-        /* ================= ANIMATIONS ================= */
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes blink { 0%, 100% { border-color: transparent; } 50% { border-color: var(--primary); } }
-        @keyframes pulseBg { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 1; } }
-        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
-
-        /* Leaderboard Section */
-        .leaderboard {
-            margin-top: 80px;
-            padding: 40px;
-            background: var(--glass-bg);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
+        footer {
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .leaderboard h2 {
-            color: var(--accent);
-            margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(255,0,255,0.5);
-        }
-        .leaderboard-content {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .rank-badge {
-            background: rgba(0,0,0,0.5);
-            padding: 15px 30px;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
+            padding: 60px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--glass-border);
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .cards-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; gap: 15px; }
-            .stats-panel { flex-direction: column; }
+            .hero h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SVG Definitions for Icons -->
     <svg style="display:none;">
-        <defs>
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#00f3ff;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#00ff66;stop-opacity:1" />
-            </linearGradient>
-            <!-- DNA Icon -->
-            <g id="icon-dna">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z" fill="url(#grad)"/>
-            </g>
-        </defs>
+        <symbol id="icon-book" viewBox="0 0 24 24">
+            <path d="M12 21l-8-4.5v-9l8 4.5 8-4.5v9l-8 4.5zm0-10.5l-8-4.5 8-4.5 8 4.5-8 4.5z"/>
+        </symbol>
     </svg>
 
-    <!-- Custom Cursor -->
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
-    <!-- Canvas Background -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- Header -->
     <header>
-        <div class="logo">
-            <svg viewBox="0 0 24 24"><use href="#icon-dna"></use></svg>
-            BioX Portal
-        </div>
-        <div style="color: var(--text-dim); letter-spacing: 1px; font-size: 0.9rem;">
-            SYSTEM OFFLINE READY // V.2026
-        </div>
+        <div class="logo">BioX Portal</div>
+        <div style="color: var(--text-dim); font-size: 0.8rem;">STATIC ENGINE // 8A5 EDITION</div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
-        <h1>Tổng Hợp Dữ Liệu Sinh Học 9</h1>
+        <h1>Trung Tâm Học Liệu</h1>
         <div class="typing-text" id="typing-text"></div>
-        
-        <div class="stats-panel">
-            <div class="stat-item">
-                <div class="stat-value">13</div>
-                <div class="stat-label">Học Phần</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">MỤC TIÊU</div>
-                <div class="stat-label">Chuyên Sinh LHP</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">60 FPS</div>
-                <div class="stat-label">Engine Tối Ưu</div>
-            </div>
-        </div>
     </section>
 
-    <!-- Main Content -->
     <main>
-        <div class="controls">
-            <input type="text" class="search-box" id="search-input" placeholder="Khám phá cơ sở dữ liệu học tập...">
-        </div>
-
-        <div class="cards-grid" id="cards-container">
-            <!-- Cards will be injected here via JS -->
-        </div>
-
-        <!-- Leaderboard -->
+        <input type="text" class="search-box" id="search-input" placeholder="Tìm kiếm tài liệu học tập...">
+        <div class="cards-grid" id="cards-container"></div>
     </main>
 
-    <footer style="text-align: center; padding: 40px; color: var(--text-dim); border-top: 1px solid var(--glass-border); margin-top: 50px; background: rgba(0,0,0,0.5);">
-        <p>Phát triển với giao diện Cinematic & WebGL/Canvas Engine. Tối ưu hóa cho độ phân giải cao.</p>
+    <footer>
+        &copy; 2026 BioX Portal. Designed for High-Performance Learning.
     </footer>
 
     <script>
-        /* ================= AUDIO SYSTEM (Web Audio API - Offline) ================= */
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-
-        function playTone(freq, type, duration, vol) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.stop(audioCtx.currentTime + duration);
-        }
-
-        function playHoverSound() { playTone(600, 'sine', 0.1, 0.05); }
-        function playClickSound() { 
-            playTone(900, 'square', 0.1, 0.1); 
-            setTimeout(() => playTone(1200, 'sine', 0.15, 0.1), 50);
-        }
-
-        /* ================= CUSTOM CURSOR LOGIC ================= */
+        /* ================= CURSOR LOGIC ================= */
         const dot = document.getElementById('cursor-dot');
         const outline = document.getElementById('cursor-outline');
 
         window.addEventListener('mousemove', (e) => {
             dot.style.left = e.clientX + 'px';
             dot.style.top = e.clientY + 'px';
-            
-            // Delayed outline
             setTimeout(() => {
                 outline.style.left = e.clientX + 'px';
                 outline.style.top = e.clientY + 'px';
-            }, 50);
+            }, 40);
         });
 
-        document.addEventListener('mousedown', () => {
-            outline.style.transform = 'translate(-50%, -50%) scale(0.7)';
-            outline.style.backgroundColor = 'rgba(0, 243, 255, 0.2)';
-        });
-        document.addEventListener('mouseup', () => {
-            outline.style.transform = 'translate(-50%, -50%) scale(1)';
-            outline.style.backgroundColor = 'transparent';
-        });
-
-        /* ================= DATA: 13 CARDS ================= */
+        /* ================= DATA ================= */
         const cardData = [
-            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tổng hợp các đề thi học sinh giỏi Sinh học lớp 8 cấp trường." },
-            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Kho lưu trữ Drive tổng hợp đề thi HSG Sinh học các cấp." },
-            { title: "SÁCH BD HSG SINH 9 - PHAN KHẮC NGHỆ", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Giáo trình bồi dưỡng chuyên sâu Sinh học 9 từ thầy Phan Khắc Nghệ." },
-            { title: "SÁCH BD HSG SINH 9 - HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Tài liệu bồi dưỡng HSG chuyên Sinh 9 biên soạn bởi Huỳnh Quốc Thành." },
-            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER1)", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Bản đọc thử cấu trúc đề thi các môn THPT QG 2026 phiên bản 1." },
-            { title: "60 ĐỀ MINH HOẠ SINH THPT 2026 - MOONBOOK", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Tuyển tập 60 đề chuẩn cấu trúc thi THPT 2026 từ Moonbook." },
-            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER2)", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Bản cập nhật lần 2 đề minh hoạ các môn thi tốt nghiệp THPT." },
-            { title: "NGƯỜI DÙNG CHIA SẺ NHIỀU TÀI LIỆU", url: "https://www.threads.com/@ha_mini19", desc: "Kênh Threads chia sẻ tài liệu học tập, luyện thi đa dạng." },
-            { title: "TÀI LIỆU ÔN THI CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Bộ đề Olympic Sinh học Quốc tế và luyện thi vào chuyên." },
-            { title: "24 ĐỀ THI THỬ MÔN SINH 2025 (VER1)", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tuyển tập 24 đề thi thử từ các Sở GD&ĐT chuẩn bị cho 2025." },
-            { title: "24 ĐỀ THI THỬ MÔN SINH 2025 (VER2)", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Cập nhật thêm bộ 24 đề rèn luyện kỹ năng thực chiến." },
-            { title: "TỔNG HỢP 65 ĐỀ THI THỬ MÔN SINH", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Kho dữ liệu khổng lồ với 65 đề thi thử sát cấu trúc thực tế." },
-            { title: "TÀI LIỆU ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Chuyên đề nâng cao phục vụ đội tuyển HSG THPT 10-12." }
+            { title: "ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tài liệu bồi dưỡng HSG cấp trường lớp 8." },
+            { title: "KHO ĐỀ HSG TỔNG HỢP", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Thư mục Drive chứa hàng trăm đề thi chọn lọc." },
+            { title: "PHAN KHẮC NGHỆ - SINH 9", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Sách bồi dưỡng chuyên sâu cho lớp 9." },
+            { title: "HUỲNH QUỐC THÀNH - SINH 9", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Cẩm nang ôn thi vào các trường chuyên." },
+            { title: "ĐỀ MINH HOẠ THPT 2026 V1", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Cập nhật cấu trúc đề thi mới nhất hệ THPT." },
+            { title: "MOONBOOK - 60 ĐỀ 2026", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Tài liệu ôn thi trắc nghiệm Sinh học Moonbook." },
+            { title: "ĐỀ MINH HOẠ THPT 2026 V2", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Phiên bản cập nhật lần 2 đề mẫu THPT." },
+            { title: "THREADS HẠ MINI", url: "https://www.threads.com/@ha_mini19", desc: "Kênh chia sẻ tài liệu và kinh nghiệm ôn thi." },
+            { title: "ÔN CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Hệ thống bài tập Olympic quốc tế." },
+            { title: "24 ĐỀ THI THỬ 2025 V1", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tuyển chọn đề thi thử các sở giáo dục." },
+            { title: "24 ĐỀ THI THỬ 2025 V2", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Bổ sung các dạng bài tập mới cho năm 2025." },
+            { title: "TỔNG HỢP 65 ĐỀ SINH", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Bộ đề luyện giải đề thi tốt nghiệp và đại học." },
+            { title: "ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Tài liệu dành cho khối THPT nâng cao." }
         ];
 
-        /* ================= RENDER CARDS & 3D TILT ================= */
+        /* ================= RENDER CARDS ================= */
         const container = document.getElementById('cards-container');
 
-        function createRipple(event, card) {
-            const circle = document.createElement('span');
-            const diameter = Math.max(card.clientWidth, card.clientHeight);
-            const radius = diameter / 2;
-            const rect = card.getBoundingClientRect();
-            
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${event.clientX - rect.left - radius}px`;
-            circle.style.top = `${event.clientY - rect.top - radius}px`;
-            circle.classList.add('ripple');
-            
-            const existingRipple = card.querySelector('.ripple');
-            if (existingRipple) existingRipple.remove();
-            card.appendChild(circle);
-        }
-
-        cardData.forEach((data, index) => {
-            const card = document.createElement('a');
-            card.href = data.url;
-            card.target = "_blank";
-            card.className = "cyber-card";
-            card.dataset.title = data.title.toLowerCase();
-            
-            card.innerHTML = `
-                <div class="card-content">
-                    <div class="card-image-container">
-                        <svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-dna"></use></svg>
-                    </div>
+        cardData.forEach(data => {
+            const link = document.createElement('a');
+            link.href = data.url;
+            link.target = "_blank";
+            link.className = "cyber-card";
+            link.innerHTML = `
+                <div class="card-inner">
+                    <svg class="card-icon"><use href="#icon-book"></use></svg>
                     <div class="card-title">${data.title}</div>
                     <div class="card-desc">${data.desc}</div>
-                    <div class="card-btn">
-                        <span>Truy Cập Dữ Liệu</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    </div>
+                    <div class="card-btn">Mở tài liệu</div>
                 </div>
             `;
 
-            // Hover effects
-            card.addEventListener('mouseenter', () => {
-                playHoverSound();
-                outline.style.borderColor = 'var(--secondary)';
-                outline.style.transform = 'scale(1.5)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-                outline.style.borderColor = 'rgba(0, 243, 255, 0.5)';
-                outline.style.transform = 'scale(1)';
-            });
-
             // 3D Tilt Effect
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
+            link.addEventListener('mousemove', (e) => {
+                const inner = link.querySelector('.card-inner');
+                const rect = link.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -10; // Max tilt degree
-                const rotateY = ((x - centerX) / centerX) * 10;
                 
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                inner.style.setProperty('--x', (x / rect.width) * 100 + '%');
+                inner.style.setProperty('--y', (y / rect.height) * 100 + '%');
+                inner.style.transform = `perspective(1000px) rotateX(${(centerY - y) / 15}deg) rotateY(${(x - centerX) / 15}deg)`;
             });
 
-            // Click Effect
-            card.addEventListener('click', (e) => {
-                playClickSound();
-                createRipple(e, card);
-                // Slight delay for animation before opening link (handled naturally if target=_blank)
+            link.addEventListener('mouseleave', () => {
+                link.querySelector('.card-inner').style.transform = `rotateX(0) rotateY(0)`;
             });
 
-            container.appendChild(card);
+            container.appendChild(link);
         });
 
-        /* ================= SEARCH FILTER ================= */
-        const searchInput = document.getElementById('search-input');
-        const cards = document.querySelectorAll('.cyber-card');
-
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            cards.forEach(card => {
-                if (card.dataset.title.includes(val)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+        /* ================= SEARCH LOGIC ================= */
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.cyber-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(term) ? 'block' : 'none';
             });
         });
 
-        /* ================= TYPING EFFECT ================= */
-        const phrases = [
-            "Khởi tạo không gian học tập Sinh học đa chiều...",
-            "Đồng bộ hóa dữ liệu chuyên sâu...",
-            "Áp dụng Cinematic Lighting & Bokeh rendering...",
-        ];
-        let pIndex = 0, charIndex = 0;
-        const typingEl = document.getElementById('typing-text');
-        
+        /* ================= SIMPLE TYPING ================= */
+        const msg = "Hệ thống lưu trữ dữ liệu học tập môn Sinh học - Offline Ready.";
+        let i = 0;
         function type() {
-            if (charIndex < phrases[pIndex].length) {
-                typingEl.textContent += phrases[pIndex].charAt(charIndex);
-                charIndex++;
+            if (i < msg.length) {
+                document.getElementById('typing-text').innerHTML += msg.charAt(i);
+                i++;
                 setTimeout(type, 50);
-            } else {
-                setTimeout(erase, 2000);
             }
         }
-        function erase() {
-            if (charIndex > 0) {
-                typingEl.textContent = phrases[pIndex].substring(0, charIndex - 1);
-                charIndex--;
-                setTimeout(erase, 30);
-            } else {
-                pIndex = (pIndex + 1) % phrases.length;
-                setTimeout(type, 500);
-            }
-        }
-        setTimeout(type, 1000);
-
-        /* ================= CINEMATIC CANVAS BACKGROUND (Floating Cells & Bokeh) ================= */
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * 3 + 1; // Depth for parallax & bokeh size
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 5 * this.z;
-                // Cyberpunk / Biology colors
-                const colors = ['rgba(0, 243, 255,', 'rgba(0, 255, 102,', 'rgba(255, 0, 255,'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.5 + 0.1;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                
-                // Mouse parallax effect (subtle)
-                // Assuming cursor x/y exists
-                const mouseX = parseFloat(dot.style.left) || width/2;
-                const mouseY = parseFloat(dot.style.top) || height/2;
-                const dx = mouseX - this.x;
-                const dy = mouseY - this.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                
-                if (dist < 200) {
-                    this.x -= (dx / dist) * 0.5;
-                    this.y -= (dy / dist) * 0.5;
-                }
-
-                // Wrap around edges
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                
-                // Cinematic Bokeh Effect (Blur based on Z depth)
-                ctx.shadowBlur = this.z * 10;
-                ctx.shadowColor = this.color + '1)';
-                ctx.fillStyle = this.color + this.alpha + ')';
-                
-                ctx.fill();
-                ctx.shadowBlur = 0; // reset
-            }
-        }
-
-        // Initialize particles
-        for(let i = 0; i < 80; i++) {
-            particles.push(new Particle());
-        }
-
-        function animateCanvas() {
-            // Trail effect for smooth motion
-            ctx.fillStyle = 'rgba(5, 5, 8, 0.2)';
-            ctx.fillRect(0, 0, width, height);
-
-            // Neural network / Grid lines
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
-            ctx.lineWidth = 1;
-            for(let i = 0; i < particles.length; i++) {
-                for(let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = dx*dx + dy*dy;
-                    if(dist < 15000) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
-            requestAnimationFrame(animateCanvas);
-        }
-
-        animateCanvas();
+        type();
     </script>
 </body>
 </html>
