@@ -7,7 +7,6 @@
     <style>
         /* ================= THEME VARIABLES ================= */
         :root {
-            /* Light Mode Colors */
             --bg-color: #fcfaf5;
             --header-bg: rgba(255, 255, 255, 0.9);
             --primary-green: #2d5a27;
@@ -20,7 +19,6 @@
         }
 
         [data-theme="dark"] {
-            /* Dark Mode Colors (Deep Forest Style) */
             --bg-color: #0d1a0b;
             --header-bg: rgba(13, 26, 11, 0.95);
             --primary-green: #4caf50;
@@ -45,11 +43,10 @@
             background-image: radial-gradient(var(--soft-green) 1px, transparent 1px);
             background-size: 30px 30px;
             color: var(--text-dark);
-            font-family: 'Segoe UI', 'Palatino Linotype', serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
         }
 
-        /* ================= HEADER & TOGGLE ================= */
         header {
             padding: 1rem 5%;
             display: flex;
@@ -72,7 +69,6 @@
             gap: 8px;
         }
 
-        /* Nút gạt chuyển chế độ */
         .theme-switch {
             background: var(--soft-green);
             border: 2px solid var(--primary-green);
@@ -84,110 +80,41 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
         }
 
-        .theme-switch:hover {
-            opacity: 0.8;
-        }
-
-        /* ================= HERO SECTION ================= */
-        .hero {
-            padding: 60px 5% 30px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            color: var(--primary-green);
-            margin-bottom: 10px;
-            font-family: 'Georgia', serif;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            font-style: italic;
-        }
-
-        /* ================= SEARCH ================= */
-        .search-container {
-            max-width: 600px;
-            margin: 30px auto;
-        }
-
+        /* ================= HERO & SEARCH ================= */
+        .hero { padding: 50px 5% 20px; text-align: center; }
+        .hero h1 { font-size: 3rem; color: var(--primary-green); margin-bottom: 10px; font-family: 'Georgia', serif; }
+        
+        .search-container { max-width: 600px; margin: 25px auto; }
         .search-box {
-            width: 100%;
-            padding: 15px 25px;
-            border: 2px solid var(--border);
-            border-radius: 50px;
-            font-size: 1rem;
-            outline: none;
-            background: var(--card-bg);
-            color: var(--text-dark);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .search-box:focus {
-            border-color: var(--primary-green);
+            width: 100%; padding: 15px 25px; border: 2px solid var(--border);
+            border-radius: 50px; background: var(--card-bg); color: var(--text-dark); outline: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
 
         /* ================= CARDS GRID ================= */
-        main {
-            padding: 40px 5% 100px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+        main { padding: 10px 5% 80px; max-width: 1300px; margin: 0 auto; }
+        .cards-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
         }
 
         .bio-card {
-            text-decoration: none;
-            color: inherit;
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
+            text-decoration: none; color: inherit; background: var(--card-bg);
+            border-radius: 12px; padding: 20px; border: 1px solid var(--border);
+            display: flex; flex-direction: column; transition: all 0.3s ease;
         }
 
-        .bio-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-green);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-        }
+        .bio-card:hover { transform: translateY(-5px); border-color: var(--primary-green); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card-emoji { font-size: 2rem; margin-bottom: 12px; }
+        .card-title { font-size: 1rem; font-weight: 700; color: var(--primary-green); margin-bottom: 8px; text-transform: uppercase; }
+        .card-desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 15px; flex-grow: 1; }
+        .card-meta { font-size: 0.8rem; font-weight: bold; color: var(--accent-wood); border-top: 1px solid var(--border); padding-top: 12px; }
 
-        .card-emoji { font-size: 2.5rem; margin-bottom: 15px; }
-        .card-title { font-size: 1.2rem; font-weight: 700; color: var(--primary-green); margin-bottom: 10px; }
-        .card-desc { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; flex-grow: 1; }
-        .card-meta { font-size: 0.8rem; font-weight: bold; color: var(--accent-wood); border-top: 1px solid var(--border); padding-top: 15px; }
-
-        /* ================= FOOTER ================= */
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--soft-green);
-            color: var(--text-light);
-            border-top: 1px solid var(--border);
-        }
-
-        .author {
-            color: var(--primary-green);
-            font-weight: 800;
-            font-size: 1.1rem;
-            margin-top: 8px;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-        }
+        footer { text-align: center; padding: 40px 20px; background: var(--soft-green); border-top: 1px solid var(--border); }
+        .author { color: var(--primary-green); font-weight: 800; font-size: 1.1rem; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
@@ -201,37 +128,37 @@
 
     <section class="hero">
         <h1>Biology 9 📖</h1>
-        <p class="hero-subtitle">"Khám phá sự sống qua từng trang sách"</p>
-        
         <div class="search-container">
-            <input type="text" class="search-box" id="search-input" placeholder="Tìm tên đề thi, tài liệu... 🔍">
+            <input type="text" class="search-box" id="search-input" placeholder="Tìm kiếm trong 13 bộ tài liệu... 🔍">
         </div>
     </section>
 
     <main>
-        <div class="cards-grid" id="cards-container">
-            </div>
+        <div class="cards-grid" id="cards-container"></div>
     </main>
 
     <footer>
-        <p>Học tập là hành trình khám phá thiên nhiên 🔬</p>
+        <p>Học tập là hành trình khám phá thế giới 🔬</p>
         <span class="author">Created by Nguyễn Hoàng Long🔥</span>
     </footer>
 
     <script>
-        // 1. Data - Thêm emote sách vở theo ý bạn
         const cardData = [
-            { emoji: "📝", title: "ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/...", desc: "Tổng hợp các dạng bài tập bồi dưỡng HSG cấp trường." },
-            { emoji: "📂", title: "KHO ĐỀ TỔNG HỢP", url: "https://drive.google.com/...", desc: "Dữ liệu đề thi Sinh học phong phú từ nhiều nguồn." },
-            { emoji: "📚", title: "SÁCH PHAN KHẮC NGHỆ", url: "https://drive.google.com/...", desc: "Tài liệu chuyên sâu cho học sinh ôn thi chuyên." },
-            { emoji: "📖", title: "SÁCH HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/...", desc: "Hướng dẫn giải chi tiết các chuyên đề Sinh lớp 9." },
-            { emoji: "🧬", title: "ĐỀ MINH HOẠ THPT 2026", url: "https://drive.google.com/...", desc: "Cập nhật cấu trúc thi mới nhất của Bộ Giáo dục." },
-            { emoji: "📑", title: "MOONBOOK - 60 ĐỀ 2026", url: "https://drive.google.com/...", desc: "Luyện giải đề trắc nghiệm Sinh học 2026." },
-            { emoji: "🧪", title: "ÔN CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/...", desc: "Bộ 21 đề chọn đội tuyển Olympic quốc tế." },
-            { emoji: "🏫", title: "ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/...", desc: "Tài liệu nâng cao dành cho khối THPT chuyên." }
+            { emoji: "🏆", title: "ĐỀ HSG 8 CẤP TRƯỜNG", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tài liệu các đề thi học sinh giỏi lớp 8 phong phú." },
+            { emoji: "📂", title: "KHO ĐỀ HSG TỔNG HỢP", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Thư mục Drive chứa nhiều bộ đề thi chọn lọc." },
+            { emoji: "📚", title: "BD HSG 9 - PHAN KHẮC NGHỆ", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Sách bồi dưỡng chuyên sâu từ thầy Phan Khắc Nghệ." },
+            { emoji: "📖", title: "BD HSG 9 - HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Tài liệu bồi dưỡng học sinh giỏi lớp 9 chất lượng." },
+            { emoji: "🧪", title: "ĐỀ MINH HOẠ THPT 2026 (V1)", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Bộ đề đọc thử các môn theo cấu trúc mới 2026." },
+            { emoji: "📑", title: "60 ĐỀ MINH HOẠ MOONBOOK", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Sách 60 đề minh họa môn Sinh từ Moonbook." },
+            { emoji: "🧬", title: "ĐỀ MINH HOẠ THPT 2026 (V2)", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Phiên bản bổ sung các môn thi cho năm 2026." },
+            { emoji: "🧵", title: "THREADS HA_MINI19", url: "https://www.threads.com/@ha_mini19", desc: "Trang cá nhân chia sẻ nhiều tài liệu học tập hay." },
+            { emoji: "🏫", title: "ÔN THI CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Bộ 21 đề chọn đội tuyển Olympic quốc tế." },
+            { emoji: "📝", title: "24 ĐỀ THỬ TRƯỜNG SỞ (V1)", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tổng hợp 24 đề thi thử môn Sinh học năm 2025." },
+            { emoji: "📝", title: "24 ĐỀ THỬ TRƯỜNG SỞ (V2)", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Danh sách 24 đề thi thử bổ sung cho kỳ thi 2025." },
+            { emoji: "📊", title: "KHO 65 ĐỀ THI THỬ", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Thư mục tổng hợp 65 đề thi thử môn Sinh học." },
+            { emoji: "🔬", title: "ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Tài liệu học tập dành cho khối THPT chuyên." }
         ];
 
-        // 2. Render Cards
         const container = document.getElementById('cards-container');
         cardData.forEach(data => {
             const card = document.createElement('a');
@@ -242,39 +169,30 @@
                 <span class="card-emoji">${data.emoji}</span>
                 <div class="card-title">${data.title}</div>
                 <div class="card-desc">${data.desc}</div>
-                <div class="card-meta">Mở sách học ngay ➜</div>
+                <div class="card-meta">Mở tài liệu ngay ➜</div>
             `;
             container.appendChild(card);
         });
 
-        // 3. Theme Toggle Logic
+        // Theme Toggle Logic
         const toggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const themeText = document.getElementById('theme-text');
-        const currentTheme = localStorage.getItem('theme');
-
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeIcon.innerText = '☀️';
-            themeText.innerText = 'Chế độ sáng';
-        }
 
         toggleBtn.addEventListener('click', () => {
             let theme = document.documentElement.getAttribute('data-theme');
             if (theme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
                 themeIcon.innerText = '🌙';
                 themeText.innerText = 'Chế độ tối';
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
                 themeIcon.innerText = '☀️';
                 themeText.innerText = 'Chế độ sáng';
             }
         });
 
-        // 4. Search Logic
+        // Search Logic
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             document.querySelectorAll('.bio-card').forEach(card => {
