@@ -3,354 +3,733 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIO-VERSE 2026: Kỷ Nguyên Sinh Học</title>
-    
-    <!-- LIBRARIES (Sức mạnh của hàng vạn dòng code) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <title>BioX Portal | Futuristic Biology Learning</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@300;500;700&display=swap');
-
+        /* ================= VARIABLES & RESET ================= */
         :root {
-            --neon-blue: #00f2fe;
-            --neon-purple: #bc13fe;
-            --dark-bg: #020205;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg-color: #050508;
+            --primary: #00f3ff;
+            --secondary: #00ff66;
+            --accent: #ff00ff;
+            --glass-bg: rgba(10, 15, 30, 0.4);
+            --glass-border: rgba(0, 243, 255, 0.2);
+            --text-main: #e0f7fa;
+            --text-dim: #8ab4f8;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        * { cursor: url('https://cur.cursors-4u.net/others/oth-9/oth810.cur'), auto; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor */
+        }
 
         body {
-            background-color: var(--dark-bg);
-            color: white;
-            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
             overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, .font-orbit { font-family: 'Orbitron', sans-serif; }
-
-        /* LOADING SCREEN */
-        #loader {
+        /* ================= CUSTOM CURSOR ================= */
+        .cursor-dot, .cursor-outline {
             position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1s ease;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        
+        /* ================= CANVAS BACKGROUND ================= */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a2a 0%, #020205 100%);
         }
 
-        .dna-spiral {
-            height: 200px;
+        /* ================= HEADER & HERO ================= */
+        header {
+            padding: 2rem 5%;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(5,5,8,0.9), transparent);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--neon-blue);
-            border-radius: 50%;
-            animation: dna-wave 2s infinite ease-in-out;
+        .logo svg {
+            width: 40px; height: 40px;
+            fill: url(#grad);
+            animation: spin 10s linear infinite;
         }
 
-        @keyframes dna-wave {
-            0%, 100% { transform: translateY(0) scale(1); filter: hue-rotate(0deg); }
-            50% { transform: translateY(100px) scale(1.5); filter: hue-rotate(180deg); }
-        }
-
-        /* GALAXY BACKGROUND */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        /* NEON GLASSMORPHISM */
-        .glass {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* 3D SYSTEM CARD */
-        .system-card {
-            perspective: 1000px;
-            transition: 0.5s;
-        }
-
-        .system-card:hover .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
+        .hero {
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            text-align: center;
+            padding-top: 100px;
+            position: relative;
         }
 
-        .card-back { transform: rotateY(180deg); background: rgba(0, 242, 254, 0.1); }
-
-        /* PULSING HEART */
-        .heart-beat {
-            animation: pulse 0.8s infinite alternate;
-            color: #ff2e63;
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 30px rgba(0, 255, 102, 0.5);
         }
 
-        @keyframes pulse {
-            from { transform: scale(1); text-shadow: 0 0 10px #ff2e63; }
-            to { transform: scale(1.2); text-shadow: 0 0 30px #ff2e63; }
+        .typing-text {
+            font-size: 1.5rem;
+            color: var(--primary);
+            min-height: 40px;
+            margin-bottom: 30px;
+            border-right: 2px solid var(--primary);
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
         }
 
-        /* FLASHCARDS */
-        .flashcard {
-            width: 250px;
-            height: 350px;
-            cursor: pointer;
+        .stats-panel {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 20px 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,243,255,0.1);
         }
 
-        /* SCROLL ANIMATION */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value { font-size: 2rem; color: var(--secondary); font-weight: bold; }
+        .stat-label { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
+        /* ================= MAIN CONTENT & GRID ================= */
+        main {
+            padding: 50px 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0,243,255,0.3), inset 0 0 15px rgba(0,243,255,0.1);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        /* ================= CARD DESIGN ================= */
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(10,15,30,0.8), rgba(5,5,15,0.9));
+            border-radius: 20px;
+            padding: 1px; /* For gradient border */
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-card:hover::before { opacity: 1; }
+
+        .card-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 19px;
+            padding: 25px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transform: translateZ(30px); /* 3D depth */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-image-container {
+            height: 160px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-image-container::after {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,243,255,0.2) 0%, transparent 70%);
+            animation: pulseBg 4s infinite alternate;
+        }
+
+        .card-icon {
+            width: 60px; height: 60px;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0,243,255,0.3);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .card-btn {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .card-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,102,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .cyber-card:hover .card-btn {
+            background: rgba(0,255,102,0.1);
+            box-shadow: 0 0 20px rgba(0,255,102,0.2);
+        }
+
+        .cyber-card:hover .card-btn::before { left: 100%; }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 243, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            pointer-events: none;
+        }
+
+        /* ================= ANIMATIONS ================= */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes blink { 0%, 100% { border-color: transparent; } 50% { border-color: var(--primary); } }
+        @keyframes pulseBg { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 1; } }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        /* Leaderboard Section */
+        .leaderboard {
+            margin-top: 80px;
+            padding: 40px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .leaderboard h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255,0,255,0.5);
+        }
+        .leaderboard-content {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .rank-badge {
+            background: rgba(0,0,0,0.5);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 15px; }
+            .stats-panel { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loader">
-        <div class="dna-spiral" id="dna-loader"></div>
-        <div class="mt-8 font-orbit text-xl text-cyan-400 tracking-[10px]">INITIALIZING BIOME...</div>
-        <div class="w-64 h-1 bg-gray-800 mt-4 rounded-full overflow-hidden">
-            <div id="progress" class="h-full bg-cyan-400 w-0 transition-all duration-300"></div>
-        </div>
-    </div>
+    <!-- SVG Definitions for Icons -->
+    <svg style="display:none;">
+        <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00f3ff;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00ff66;stop-opacity:1" />
+            </linearGradient>
+            <!-- DNA Icon -->
+            <g id="icon-dna">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z" fill="url(#grad)"/>
+            </g>
+        </defs>
+    </svg>
 
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Canvas Background -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Header / Navbar -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass">
-        <div class="flex items-center gap-3">
-            <i class="fas fa-microscope text-3xl text-cyan-400 animate-spin-slow"></i>
-            <span class="text-2xl font-bold font-orbit tracking-tighter">BIO<span class="text-cyan-400">VERSE</span></span>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><use href="#icon-dna"></use></svg>
+            BioX Portal
         </div>
-        <div class="hidden lg:flex gap-8 font-semibold">
-            <a href="#home" class="hover:text-cyan-400 transition">SẢNH</a>
-            <a href="#systems" class="hover:text-cyan-400 transition">HỆ CƠ QUAN</a>
-            <a href="#lab" class="hover:text-cyan-400 transition">PHÒNG THÍ NGHIỆM</a>
-            <a href="#quiz" class="hover:text-cyan-400 transition">QUIZ GAME</a>
+        <div style="color: var(--text-dim); letter-spacing: 1px; font-size: 0.9rem;">
+            SYSTEM OFFLINE READY // V.2026
         </div>
-        <div class="flex gap-4">
-            <button onclick="toggleAudio()" class="p-2 glass rounded-full"><i id="vol-icon" class="fas fa-volume-up"></i></button>
-            <button class="bg-cyan-500 hover:bg-cyan-400 px-6 py-2 rounded-full font-bold transition-all shadow-[0_0_15px_#00f2fe]">ĐĂNG NHẬP</button>
-        </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
-        <div class="text-center z-10">
-            <h1 class="text-8xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">HUMAN BODY</h1>
-            <p class="text-cyan-400 text-2xl font-orbit mb-12 tracking-[5px]">MÔ PHỎNG SINH HỌC 3D THẾ HỆ MỚI</p>
-            <div class="flex justify-center gap-6">
-                <div class="glass p-6 rounded-2xl flex flex-col items-center">
-                    <i class="fas fa-heartbeat heart-beat text-4xl mb-2"></i>
-                    <span class="text-xs">NHỊP TIM HIỆN TẠI: 72 BPM</span>
-                </div>
-                <div class="glass p-6 rounded-2xl flex flex-col items-center">
-                    <i class="fas fa-dna text-blue-400 text-4xl mb-2 animate-bounce"></i>
-                    <span class="text-xs">GIẢI MÃ GENOME: 99.9%</span>
-                </div>
+    <section class="hero">
+        <h1>Trung Tâm Dữ Liệu Sinh Học</h1>
+        <div class="typing-text" id="typing-text"></div>
+        
+        <div class="stats-panel">
+            <div class="stat-item">
+                <div class="stat-value">13</div>
+                <div class="stat-label">Học Phần</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">PET/B1</div>
+                <div class="stat-label">Chuẩn Đầu Ra</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">60 FPS</div>
+                <div class="stat-label">Engine Tối Ưu</div>
             </div>
         </div>
     </section>
 
-    <!-- 8 Systems Grid -->
-    <section id="systems" class="py-32 px-10">
-        <h2 class="text-5xl font-bold mb-20 text-center font-orbit">8 HỆ CƠ QUAN</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10" id="systems-container">
-            <!-- Render via JS -->
+    <!-- Main Content -->
+    <main>
+        <div class="controls">
+            <input type="text" class="search-box" id="search-input" placeholder="Khám phá cơ sở dữ liệu học tập...">
         </div>
-    </section>
 
-    <!-- Lab & AI Chatbot -->
-<section id="lab" class="py-20 px-10">
-    <h2 class="text-4xl font-bold mb-10 font-orbit text-center">PHÒNG THÍ NGHIỆM GIẢI PHẪU 3D</h2>
-    
-    <div class="glass rounded-3xl p-10">
-        <div id="anatomy-display">
-            <!-- Bên trái: Mô hình 3D & Danh sách cơ quan -->
-            <div class="relative">
-                <div id="3d-viewport" class="w-full h-[400px] rounded-2xl mb-6 bg-gradient-to-b from-blue-900/20 to-black">
-                    <!-- Canvas Three.js sẽ render ở đây -->
-                </div>
-                
-                <div id="organ-selection" class="organ-list">
-                    <p class="text-gray-500 italic">Chọn một hệ cơ quan từ menu bên dưới để xem chi tiết...</p>
-                </div>
-            </div>
+        <div class="cards-grid" id="cards-container">
+            <!-- Cards will be injected here via JS -->
+        </div>
 
-            <!-- Bên phải: Thông tin chi tiết cơ quan -->
-            <div id="organ-info" class="flex items-center justify-center">
-                <div class="text-center text-gray-500">
-                    <i class="fas fa-microscope text-6xl mb-4"></i>
-                    <p>Bấm vào một cơ quan cụ thể để xem cấu tạo và chức năng</p>
+        <!-- Leaderboard -->
+        <div class="leaderboard">
+            <h2>🏆 TỔ 1 - 8A5 ACHIEVEMENT BOARD 🏆</h2>
+            <p style="margin-bottom: 20px; color: var(--text-dim);">Hệ thống ghi nhận hoạt động thi đua và học tập xuất sắc.</p>
+            <div class="leaderboard-content">
+                <div class="rank-badge">
+                    <h3 style="color: gold;">Top 1: Tổ 1 (8A5)</h3>
+                    <p>Hoàn thành 100% nhiệm vụ</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </main>
 
-    <!-- Mini Games & Flashcards -->
-    <section id="quiz" class="py-32 px-10 bg-white/5">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-end mb-16">
-                <div>
-                    <h2 class="text-4xl font-bold font-orbit">BIO CHALLENGE</h2>
-                    <p class="text-gray-400">Kiểm tra kiến thức để thăng hạng</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-sm block">ĐIỂM CAO NHẤT</span>
-                    <span class="text-3xl font-bold text-yellow-400">2,450 XP</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass p-10 rounded-3xl text-center hover:bg-cyan-500/10 transition group">
-                    <i class="fas fa-brain text-6xl mb-6 group-hover:rotate-12 transition"></i>
-                    <h3 class="text-xl font-bold mb-4">Quiz Trắc Nghiệm</h3>
-                    <button class="w-full py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">BẮT ĐẦU</button>
-                </div>
-                <div class="glass p-10 rounded-3xl text-center hover:bg-purple-500/10 transition group">
-                    <i class="fas fa-clone text-6xl mb-6 group-hover:rotate-12 transition"></i>
-                    <h3 class="text-xl font-bold mb-4">Flashcards</h3>
-                    <button class="w-full py-3 border border-purple-400 rounded-xl hover:bg-purple-400 hover:text-black transition">HỌC NGAY</button>
-                </div>
-                <div class="glass p-10 rounded-3xl text-center hover:bg-green-500/10 transition group">
-                    <i class="fas fa-gamepad text-6xl mb-6 group-hover:rotate-12 transition"></i>
-                    <h3 class="text-xl font-bold mb-4">Mini Game Tế Bào</h3>
-                    <button class="w-full py-3 border border-green-400 rounded-xl hover:bg-green-400 hover:text-black transition">CHƠI GAME</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 text-center text-gray-500 text-sm border-t border-white/5">
-        <p>© 2026 BIO-VERSE - Lập trình bởi Gemini cho Long Nguyen (Lớp 8A5)</p>
+    <footer style="text-align: center; padding: 40px; color: var(--text-dim); border-top: 1px solid var(--glass-border); margin-top: 50px; background: rgba(0,0,0,0.5);">
+        <p>Phát triển với giao diện Cinematic & WebGL/Canvas Engine. Tối ưu hóa cho độ phân giải cao.</p>
     </footer>
 
     <script>
-        // --- DATA ENGINE (Lưu trữ dữ liệu hàng nghìn dòng vào cấu trúc mảng) ---
-        const anatomyData = [
-            { id: 1, name: "Hệ Tuần Hoàn", icon: "fa-heart", color: "#ff4b2b", parts: ["Tim", "Mạch máu", "Máu"], function: "Vận chuyển Oxy và chất dinh dưỡng đến các tế bào." },
-            { id: 2, name: "Hệ Thần Kinh", icon: "fa-brain", color: "#a18cd1", parts: ["Não", "Tủy sống", "Dây thần kinh"], function: "Điều khiển và phối hợp các hoạt động cơ thể." },
-            { id: 3, name: "Hệ Hô Hấp", icon: "fa-lungs", color: "#4facfe", parts: ["Mũi", "Khí quản", "Phổi"], function: "Trao đổi khí O2 và CO2 với môi trường." },
-            { id: 4, name: "Hệ Tiêu Hóa", icon: "fa-utensils", color: "#f6d365", parts: ["Dạ dày", "Ruột", "Gan"], function: "Biến thức ăn thành chất dinh dưỡng." },
-            { id: 5, name: "Hệ Vận Động", icon: "fa-bone", color: "#e2ebf0", parts: ["Xương", "Cơ", "Khớp"], function: "Nâng đỡ và bảo vệ, giúp cơ thể di chuyển." },
-            { id: 6, name: "Hệ Bài Tiết", icon: "fa-filter", color: "#667eea", parts: ["Thận", "Bàng quang"], function: "Lọc bỏ chất thải và cân bằng nước." },
-            { id: 7, name: "Hệ Nội Tiết", icon: "fa-flask", color: "#f093fb", parts: ["Tuyến yên", "Tuyến giáp"], function: "Tiết Hormone điều hòa sinh lý." },
-            { id: 8, name: "Hệ Sinh Sản", icon: "fa-dna", color: "#ff9a9e", parts: ["Buồng trứng/Tinh hoàn"], function: "Duy trì nòi giống qua các thế hệ." }
+        /* ================= AUDIO SYSTEM (Web Audio API - Offline) ================= */
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playTone(freq, type, duration, vol) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function playHoverSound() { playTone(600, 'sine', 0.1, 0.05); }
+        function playClickSound() { 
+            playTone(900, 'square', 0.1, 0.1); 
+            setTimeout(() => playTone(1200, 'sine', 0.15, 0.1), 50);
+        }
+
+        /* ================= CUSTOM CURSOR LOGIC ================= */
+        const dot = document.getElementById('cursor-dot');
+        const outline = document.getElementById('cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            
+            // Delayed outline
+            setTimeout(() => {
+                outline.style.left = e.clientX + 'px';
+                outline.style.top = e.clientY + 'px';
+            }, 50);
+        });
+
+        document.addEventListener('mousedown', () => {
+            outline.style.transform = 'translate(-50%, -50%) scale(0.7)';
+            outline.style.backgroundColor = 'rgba(0, 243, 255, 0.2)';
+        });
+        document.addEventListener('mouseup', () => {
+            outline.style.transform = 'translate(-50%, -50%) scale(1)';
+            outline.style.backgroundColor = 'transparent';
+        });
+
+        /* ================= DATA: 13 CARDS ================= */
+        const cardData = [
+            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tổng hợp các đề thi học sinh giỏi Sinh học lớp 8 cấp trường." },
+            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Kho lưu trữ Drive tổng hợp đề thi HSG Sinh học các cấp." },
+            { title: "SÁCH BD HSG SINH 9 - PHAN KHẮC NGHỆ", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Giáo trình bồi dưỡng chuyên sâu Sinh học 9 từ thầy Phan Khắc Nghệ." },
+            { title: "SÁCH BD HSG SINH 9 - HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Tài liệu bồi dưỡng HSG chuyên Sinh 9 biên soạn bởi Huỳnh Quốc Thành." },
+            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER1)", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Bản đọc thử cấu trúc đề thi các môn THPT QG 2026 phiên bản 1." },
+            { title: "60 ĐỀ MINH HOẠ SINH THPT 2026 - MOONBOOK", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Tuyển tập 60 đề chuẩn cấu trúc thi THPT 2026 từ Moonbook." },
+            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER2)", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Bản cập nhật lần 2 đề minh hoạ các môn thi tốt nghiệp THPT." },
+            { title: "NGƯỜI DÙNG CHIA SẺ NHIỀU TÀI LIỆU", url: "https://www.threads.com/@ha_mini19", desc: "Kênh Threads chia sẻ tài liệu học tập, luyện thi đa dạng." },
+            { title: "TÀI LIỆU ÔN THI CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Bộ đề Olympic Sinh học Quốc tế và luyện thi vào chuyên." },
+            { title: "24 ĐỀ THI THỬ MÔN SINH 2025 (VER1)", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tuyển tập 24 đề thi thử từ các Sở GD&ĐT chuẩn bị cho 2025." },
+            { title: "24 ĐỀ THI THỬ MÔN SINH 2025 (VER2)", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Cập nhật thêm bộ 24 đề rèn luyện kỹ năng thực chiến." },
+            { title: "TỔNG HỢP 65 ĐỀ THI THỬ MÔN SINH", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Kho dữ liệu khổng lồ với 65 đề thi thử sát cấu trúc thực tế." },
+            { title: "TÀI LIỆU ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Chuyên đề nâng cao phục vụ đội tuyển HSG THPT 10-12." }
         ];
 
-        // --- RENDERER ---
-        const container = document.getElementById('systems-container');
-        anatomyData.forEach(sys => {
-            container.innerHTML += `
-                <div class="system-card" onclick="openSystem(${sys.id})">
-                    <div class="card-inner">
-                        <div class="card-front glass">
-                            <i class="fas ${sys.icon} text-5xl mb-4" style="color: ${sys.color}"></i>
-                            <h4 class="text-xl font-bold">${sys.name}</h4>
-                        </div>
-                        <div class="card-back glass">
-                            <p class="text-xs mb-2 font-bold text-cyan-400">BỘ PHẬN CHÍNH:</p>
-                            <p class="text-sm mb-4">${sys.parts.join(', ')}</p>
-                            <p class="text-xs italic">${sys.function}</p>
-                        </div>
+        /* ================= RENDER CARDS & 3D TILT ================= */
+        const container = document.getElementById('cards-container');
+
+        function createRipple(event, card) {
+            const circle = document.createElement('span');
+            const diameter = Math.max(card.clientWidth, card.clientHeight);
+            const radius = diameter / 2;
+            const rect = card.getBoundingClientRect();
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - rect.left - radius}px`;
+            circle.style.top = `${event.clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+            
+            const existingRipple = card.querySelector('.ripple');
+            if (existingRipple) existingRipple.remove();
+            card.appendChild(circle);
+        }
+
+        cardData.forEach((data, index) => {
+            const card = document.createElement('a');
+            card.href = data.url;
+            card.target = "_blank";
+            card.className = "cyber-card";
+            card.dataset.title = data.title.toLowerCase();
+            
+            card.innerHTML = `
+                <div class="card-content">
+                    <div class="card-image-container">
+                        <svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-dna"></use></svg>
+                    </div>
+                    <div class="card-title">${data.title}</div>
+                    <div class="card-desc">${data.desc}</div>
+                    <div class="card-btn">
+                        <span>Truy Cập Dữ Liệu</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                     </div>
                 </div>
             `;
+
+            // Hover effects
+            card.addEventListener('mouseenter', () => {
+                playHoverSound();
+                outline.style.borderColor = 'var(--secondary)';
+                outline.style.transform = 'scale(1.5)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                outline.style.borderColor = 'rgba(0, 243, 255, 0.5)';
+                outline.style.transform = 'scale(1)';
+            });
+
+            // 3D Tilt Effect
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -10; // Max tilt degree
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            // Click Effect
+            card.addEventListener('click', (e) => {
+                playClickSound();
+                createRipple(e, card);
+                // Slight delay for animation before opening link (handled naturally if target=_blank)
+            });
+
+            container.appendChild(card);
         });
 
-        // --- THREE.JS GALAXY ENGINE ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        /* ================= SEARCH FILTER ================= */
+        const searchInput = document.getElementById('search-input');
+        const cards = document.querySelectorAll('.cyber-card');
 
-        const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
-        const starVertices = [];
-        for(let i=0; i<15000; i++) {
-            starVertices.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
-        }
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
-        camera.position.z = 1;
-
-        // --- DNA LOADER ANIMATION ---
-        const loaderDna = document.getElementById('dna-loader');
-        for(let i=0; i<20; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.animationDelay = `${i * 0.1}s`;
-            loaderDna.appendChild(dot);
-        }
-
-        // --- APP LOGIC ---
-        window.addEventListener('load', () => {
-            let p = 0;
-            const interval = setInterval(() => {
-                p += Math.random() * 10;
-                document.getElementById('progress').style.width = p + '%';
-                if(p >= 100) {
-                    clearInterval(interval);
-                    document.getElementById('loader').style.opacity = '0';
-                    setTimeout(() => document.getElementById('loader').remove(), 1000);
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                if (card.dataset.title.includes(val)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
                 }
-            }, 150);
+            });
         });
 
-        function animate() {
-            requestAnimationFrame(animate);
-            stars.rotation.y += 0.0005;
-            stars.rotation.x += 0.0002;
-            renderer.render(scene, camera);
+        /* ================= TYPING EFFECT ================= */
+        const phrases = [
+            "Khởi tạo không gian học tập Sinh học đa chiều...",
+            "Đồng bộ hóa dữ liệu chuyên sâu...",
+            "Áp dụng Cinematic Lighting & Bokeh rendering...",
+            "Định dạng nội dung chuẩn hóa PET/B1..."
+        ];
+        let pIndex = 0, charIndex = 0;
+        const typingEl = document.getElementById('typing-text');
+        
+        function type() {
+            if (charIndex < phrases[pIndex].length) {
+                typingEl.textContent += phrases[pIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 50);
+            } else {
+                setTimeout(erase, 2000);
+            }
         }
-        animate();
-
-        // AI Chatbot Simple Logic
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const content = document.getElementById('chat-content');
-            if(!input.value) return;
-
-            content.innerHTML += `<div class="text-right"><span class="bg-cyan-500/20 p-2 rounded-xl inline-block border border-cyan-400/30">${input.value}</span></div>`;
-            
-            setTimeout(() => {
-                content.innerHTML += `<div class="text-left"><span class="bg-white/10 p-2 rounded-xl inline-block border-l-2 border-cyan-400 italic">Đang phân tích dữ liệu sinh học...</span></div>`;
-                content.scrollTop = content.scrollHeight;
-            }, 500);
-            
-            input.value = '';
+        function erase() {
+            if (charIndex > 0) {
+                typingEl.textContent = phrases[pIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(erase, 30);
+            } else {
+                pIndex = (pIndex + 1) % phrases.length;
+                setTimeout(type, 500);
+            }
         }
+        setTimeout(type, 1000);
+
+        /* ================= CINEMATIC CANVAS BACKGROUND (Floating Cells & Bokeh) ================= */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.z = Math.random() * 3 + 1; // Depth for parallax & bokeh size
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 5 * this.z;
+                // Cyberpunk / Biology colors
+                const colors = ['rgba(0, 243, 255,', 'rgba(0, 255, 102,', 'rgba(255, 0, 255,'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Mouse parallax effect (subtle)
+                // Assuming cursor x/y exists
+                const mouseX = parseFloat(dot.style.left) || width/2;
+                const mouseY = parseFloat(dot.style.top) || height/2;
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 200) {
+                    this.x -= (dx / dist) * 0.5;
+                    this.y -= (dy / dist) * 0.5;
+                }
+
+                // Wrap around edges
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                
+                // Cinematic Bokeh Effect (Blur based on Z depth)
+                ctx.shadowBlur = this.z * 10;
+                ctx.shadowColor = this.color + '1)';
+                ctx.fillStyle = this.color + this.alpha + ')';
+                
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+            }
+        }
+
+        // Initialize particles
+        for(let i = 0; i < 80; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateCanvas() {
+            // Trail effect for smooth motion
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Neural network / Grid lines
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for(let i = 0; i < particles.length; i++) {
+                for(let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = dx*dx + dy*dy;
+                    if(dist < 15000) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        animateCanvas();
     </script>
 </body>
 </html>
