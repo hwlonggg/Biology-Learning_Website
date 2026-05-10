@@ -3,36 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioX Portal | Static Premium Edition</title>
+    <title>Biology 9 | Hoang Long Edition</title>
     <style>
         /* ================= VARIABLES & RESET ================= */
         :root {
             --bg-color: #020205;
             --primary: #00f3ff;
             --secondary: #00ff66;
-            --accent: #ff00ff;
-            --glass-bg: rgba(10, 15, 30, 0.6);
+            --glass-bg: rgba(10, 15, 30, 0.7);
             --glass-border: rgba(0, 243, 255, 0.2);
             --text-main: #e0f7fa;
             --text-dim: #8ab4f8;
-            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none;
+            cursor: none; /* Custom cursor */
         }
 
         body {
             background-color: var(--bg-color);
-            /* NỀN TĨNH: Kết hợp Radial Gradient và lưới Cyber Grid mờ */
+            /* NỀN TĨNH: Radial Gradient & Cyber Grid */
             background-image: 
                 radial-gradient(circle at 50% 50%, #0a0a2a 0%, #020205 100%),
                 linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
+            background-size: 100% 100%, 45px 45px, 45px 45px;
             background-attachment: fixed;
             color: var(--text-main);
             font-family: var(--font-main);
@@ -66,11 +65,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(2, 2, 5, 0.8);
+            background: rgba(2, 2, 5, 0.85);
             position: fixed;
             width: 100%;
             z-index: 100;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -80,62 +79,61 @@
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            letter-spacing: 1px;
         }
 
         /* ================= HERO SECTION ================= */
         .hero {
-            padding: 160px 5% 60px;
+            padding: 160px 5% 40px;
             text-align: center;
-            position: relative;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            background: linear-gradient(to bottom, #fff, var(--text-dim));
+            letter-spacing: 6px;
+            background: linear-gradient(to bottom, #ffffff 30%, var(--text-dim));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.2));
         }
 
         .typing-text {
-            font-size: 1.2rem;
-            color: var(--primary);
-            min-height: 30px;
-            margin-bottom: 40px;
-            opacity: 0.8;
+            font-size: 1.1rem;
+            color: var(--secondary);
+            opacity: 0.9;
+            letter-spacing: 2px;
+            min-height: 25px;
         }
 
         /* ================= MAIN GRID ================= */
         main {
-            padding: 0 5% 100px;
+            padding: 40px 5% 100px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .search-box {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             display: block;
             margin: 0 auto 60px;
-            padding: 15px 30px;
+            padding: 16px 25px;
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            color: white;
+            color: #fff;
             font-size: 1rem;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            text-align: center;
         }
 
         .search-box:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0,243,255,0.1);
-            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 25px rgba(0,243,255,0.15);
+            background: rgba(255,255,255,0.06);
         }
 
         .cards-grid {
@@ -153,114 +151,119 @@
         .card-inner {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 30px;
             height: 100%;
             display: flex;
             flex-direction: column;
-            transition: transform 0.1s ease, border-color 0.3s;
+            transition: transform 0.15s ease, border-color 0.4s;
             transform-style: preserve-3d;
             position: relative;
             overflow: hidden;
         }
 
-        .card-inner::after {
+        .card-inner::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,243,255,0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,243,255,0.12) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.3s;
         }
 
         .cyber-card:hover .card-inner {
             border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .cyber-card:hover .card-inner::after { opacity: 1; }
-
-        .card-icon {
-            width: 45px; height: 45px;
-            margin-bottom: 20px;
-            fill: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary));
-        }
+        .cyber-card:hover .card-inner::before { opacity: 1; }
 
         .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.15rem;
+            font-weight: 800;
             margin-bottom: 12px;
             color: #fff;
             line-height: 1.4;
-            transform: translateZ(20px);
+            transform: translateZ(25px);
         }
 
         .card-desc {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-dim);
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             flex-grow: 1;
+            transform: translateZ(15px);
         }
 
         .card-btn {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid var(--secondary);
             color: var(--secondary);
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: 0.3s;
+            transform: translateZ(10px);
         }
 
         .cyber-card:hover .card-btn {
             background: var(--secondary);
-            color: #000;
+            color: #020205;
+            box-shadow: 0 0 15px var(--secondary);
         }
 
+        /* ================= FOOTER ================= */
         footer {
             text-align: center;
-            padding: 60px;
+            padding: 80px 20px;
             color: var(--text-dim);
-            font-size: 0.8rem;
+            font-size: 1rem;
             border-top: 1px solid var(--glass-border);
+            letter-spacing: 1px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .author-name {
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: block;
+            font-size: 1.1rem;
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .logo { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-    <svg style="display:none;">
-        <symbol id="icon-book" viewBox="0 0 24 24">
-            <path d="M12 21l-8-4.5v-9l8 4.5 8-4.5v9l-8 4.5zm0-10.5l-8-4.5 8-4.5 8 4.5-8 4.5z"/>
-        </symbol>
-    </svg>
-
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
     <header>
-        <div class="logo">BioX Portal</div>
-        <div style="color: var(--text-dim); font-size: 0.8rem;">STATIC ENGINE // 8A5 EDITION</div>
+        <div class="logo">BIOLOGY 9</div>
+        <div style="color: var(--primary); font-size: 0.8rem; font-weight: bold; letter-spacing: 2px;">RESOURCES HUB</div>
     </header>
 
     <section class="hero">
-        <h1>Trung Tâm Học Liệu</h1>
+        <h1>Biology 9</h1>
         <div class="typing-text" id="typing-text"></div>
     </section>
 
     <main>
-        <input type="text" class="search-box" id="search-input" placeholder="Tìm kiếm tài liệu học tập...">
+        <input type="text" class="search-box" id="search-input" placeholder="Tìm kiếm học liệu...">
         <div class="cards-grid" id="cards-container"></div>
     </main>
 
     <footer>
-        &copy; 2026 BioX Portal. Designed for High-Performance Learning.
+        <p>Hệ thống tài liệu trực tuyến chuyên sâu</p>
+        <span class="author-name">Created by Nguyễn Hoàng Long🔥</span>
     </footer>
 
     <script>
@@ -274,24 +277,24 @@
             setTimeout(() => {
                 outline.style.left = e.clientX + 'px';
                 outline.style.top = e.clientY + 'px';
-            }, 40);
+            }, 50);
         });
 
         /* ================= DATA ================= */
         const cardData = [
-            { title: "ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tài liệu bồi dưỡng HSG cấp trường lớp 8." },
-            { title: "KHO ĐỀ HSG TỔNG HỢP", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Thư mục Drive chứa hàng trăm đề thi chọn lọc." },
-            { title: "PHAN KHẮC NGHỆ - SINH 9", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Sách bồi dưỡng chuyên sâu cho lớp 9." },
-            { title: "HUỲNH QUỐC THÀNH - SINH 9", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Cẩm nang ôn thi vào các trường chuyên." },
-            { title: "ĐỀ MINH HOẠ THPT 2026 V1", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Cập nhật cấu trúc đề thi mới nhất hệ THPT." },
-            { title: "MOONBOOK - 60 ĐỀ 2026", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Tài liệu ôn thi trắc nghiệm Sinh học Moonbook." },
-            { title: "ĐỀ MINH HOẠ THPT 2026 V2", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Phiên bản cập nhật lần 2 đề mẫu THPT." },
-            { title: "THREADS HẠ MINI", url: "https://www.threads.com/@ha_mini19", desc: "Kênh chia sẻ tài liệu và kinh nghiệm ôn thi." },
-            { title: "ÔN CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Hệ thống bài tập Olympic quốc tế." },
-            { title: "24 ĐỀ THI THỬ 2025 V1", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tuyển chọn đề thi thử các sở giáo dục." },
-            { title: "24 ĐỀ THI THỬ 2025 V2", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Bổ sung các dạng bài tập mới cho năm 2025." },
-            { title: "TỔNG HỢP 65 ĐỀ SINH", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Bộ đề luyện giải đề thi tốt nghiệp và đại học." },
-            { title: "ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Tài liệu dành cho khối THPT nâng cao." }
+            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI 8", url: "https://tailieu.vn/tim-kiem/?q=B%E1%BB%99+%C4%91%E1%BB%81+thi+h%E1%BB%8Dc+sinh+gi%E1%BB%8Fi+m%C3%B4n+Sinh+h%E1%BB%8Dc+l%E1%BB%9Bp+8+c%E1%BA%A5p+tr%C6%B0%E1%BB%9Dng", desc: "Tổng hợp đề thi HSG Sinh học lớp 8 cấp trường." },
+            { title: "TÀI LIỆU CÁC ĐỀ HỌC SINH GIỎI", url: "https://drive.google.com/drive/folders/15Gy1Y_pQJ8HvFy1hav_3i7Hgt83UQO8p", desc: "Kho lưu trữ Drive tổng hợp đề thi HSG các cấp." },
+            { title: "SÁCH BD HSG SINH 9 - PHAN KHẮC NGHỆ", url: "https://drive.google.com/file/d/1RWoCL2xCi9dRmgN5in7epVficZwP_VRG/view?pli=1", desc: "Giáo trình bồi dưỡng chuyên sâu Sinh học 9." },
+            { title: "SÁCH BD HSG SINH 9 - HUỲNH QUỐC THÀNH", url: "https://www.taisachonthi.com/2021/11/pdf-boi-duong-hoc-sinh-gioi-sinh-hoc-9.html?utm_source=chatgpt.com", desc: "Tài liệu bồi dưỡng HSG chuyên Sinh 9." },
+            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER1)", url: "https://drive.google.com/drive/folders/1DHCFvCF_DyE5XUyBX7PZ16QavZuYODv0?hl=vi&safe=active", desc: "Cấu trúc đề thi minh họa THPT 2026 lần 1." },
+            { title: "SÁCH 60 ĐỀ MINH HOẠ SINH 2026", url: "https://drive.google.com/file/d/1tPVc8_lE1CphW8N91PoAumzV-jmUb7KM/view", desc: "Bộ đề chuẩn từ Moonbook cho kỳ thi 2026." },
+            { title: "BỘ ĐỀ MINH HOẠ THPT 2026 (VER2)", url: "https://drive.google.com/drive/folders/1hYDCL3ldC0aKoziPcNEVcuiH04n6y75D?hl=vi&safe=active", desc: "Cấu trúc đề thi minh họa THPT 2026 lần 2." },
+            { title: "NGƯỜI DÙNG CHIA SẺ TÀI LIỆU", url: "https://www.threads.com/@ha_mini19", desc: "Kênh chia sẻ tài liệu học tập đa môn học." },
+            { title: "ÔN THI CHUYÊN SINH 9-12", url: "https://hoclieuxanh.com/posts/bo-21-de-chon-doi-tuyen-olympic-sinh-hoc-quoc-te-tu-2003-den-2021-pdf?utm_source=chatgpt.com", desc: "Bộ đề chọn đội tuyển Olympic Sinh học quốc tế." },
+            { title: "24 ĐỀ THI THỬ SINH 2025 (VER1)", url: "https://www.threads.com/@ha_mini19/post/DWRTcLEj3cP", desc: "Tổng hợp đề thi thử các trường và sở GD 2025." },
+            { title: "24 ĐỀ THI THỬ SINH 2025 (VER2)", url: "https://www.threads.com/@ha_mini19/post/DWQFdbrjwqm", desc: "Bổ sung các đề thi thử Sinh học chất lượng." },
+            { title: "TỔNG HỢP 65 ĐỀ THI THỬ", url: "https://drive.google.com/drive/folders/1dFq7YwsV2Ukb-v0GHfGl-9LYKTitMUmA", desc: "Tập hợp 65 đề thi thử môn Sinh học chọn lọc." },
+            { title: "TÀI LIỆU ÔN CHUYÊN SINH 10-12", url: "https://www.vnteach.com/tai-lieu-hsg-sinh-hoc-10?utm_source=chatgpt.com", desc: "Dữ liệu ôn thi học sinh giỏi lớp 10, 11 và 12." }
         ];
 
         /* ================= RENDER CARDS ================= */
@@ -304,10 +307,9 @@
             link.className = "cyber-card";
             link.innerHTML = `
                 <div class="card-inner">
-                    <svg class="card-icon"><use href="#icon-book"></use></svg>
                     <div class="card-title">${data.title}</div>
                     <div class="card-desc">${data.desc}</div>
-                    <div class="card-btn">Mở tài liệu</div>
+                    <div class="card-btn">Truy cập ngay</div>
                 </div>
             `;
 
@@ -322,11 +324,11 @@
                 
                 inner.style.setProperty('--x', (x / rect.width) * 100 + '%');
                 inner.style.setProperty('--y', (y / rect.height) * 100 + '%');
-                inner.style.transform = `perspective(1000px) rotateX(${(centerY - y) / 15}deg) rotateY(${(x - centerX) / 15}deg)`;
+                inner.style.transform = `perspective(1000px) rotateX(${(centerY - y) / 12}deg) rotateY(${(x - centerX) / 12}deg) scale3d(1.02, 1.02, 1.02)`;
             });
 
             link.addEventListener('mouseleave', () => {
-                link.querySelector('.card-inner').style.transform = `rotateX(0) rotateY(0)`;
+                link.querySelector('.card-inner').style.transform = `rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
             });
 
             container.appendChild(link);
@@ -341,17 +343,17 @@
             });
         });
 
-        /* ================= SIMPLE TYPING ================= */
-        const msg = "Hệ thống lưu trữ dữ liệu học tập môn Sinh học - Offline Ready.";
+        /* ================= TYPING ANIMATION ================= */
+        const msg = "Database initialized... Accessing Biological Resources.";
         let i = 0;
-        function type() {
+        function typeEffect() {
             if (i < msg.length) {
                 document.getElementById('typing-text').innerHTML += msg.charAt(i);
                 i++;
-                setTimeout(type, 50);
+                setTimeout(typeEffect, 60);
             }
         }
-        type();
+        setTimeout(typeEffect, 800);
     </script>
 </body>
 </html>
